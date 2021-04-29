@@ -66,11 +66,11 @@ parser.add_argument('--shape_color_combos_json', default=None,
 # Settings for objects
 parser.add_argument('--min_objects', default=3, type=int,
     help="The minimum number of objects to place in each scene")
-parser.add_argument('--max_objects', default=7, type=int,
+parser.add_argument('--max_objects', default=10, type=int,
     help="The maximum number of objects to place in each scene")
 parser.add_argument('--min_dist', default=0.25, type=float,
     help="The minimum allowed distance between object centers")
-parser.add_argument('--margin', default=0.1, type=float,
+parser.add_argument('--margin', default=0.4, type=float,
     help="Along all cardinal directions (left, right, front, back), all " +
          "objects will be at least this distance apart. This makes resolving " +
          "spatial relationships slightly less ambiguous.")
@@ -123,13 +123,13 @@ parser.add_argument('--date', default=dt.today().strftime("%m/%d/%Y"),
          "defaults to today's date")
 
 # Rendering options
-parser.add_argument('--use_gpu', default=0, type=int,
+parser.add_argument('--use_gpu', default=1, type=int,
     help="Setting --use_gpu 1 enables GPU-accelerated rendering using CUDA. " +
          "You must have an NVIDIA GPU with the CUDA toolkit installed for " +
          "to work.")
-parser.add_argument('--width', default=64, type=int,
+parser.add_argument('--width', default=320, type=int,
     help="The width (in pixels) for the rendered images")
-parser.add_argument('--height', default=64, type=int,
+parser.add_argument('--height', default=240, type=int,
     help="The height (in pixels) for the rendered images")
 parser.add_argument('--key_light_jitter', default=1.0, type=float,
     help="The magnitude of random jitter to add to the key light position.")
