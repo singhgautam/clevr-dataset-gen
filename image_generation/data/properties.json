@@ -19,6 +19,7 @@
     "metal": "MyMetal"
   },
   "sizes": {
+    "xlarge": 1.0,
     "large": 0.7,
     "small": 0.35
   }
