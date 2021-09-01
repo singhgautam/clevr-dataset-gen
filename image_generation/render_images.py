@@ -352,11 +352,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
   blender_objects = []
   for i in range(num_objects):
     # Choose a random size
-    if i > 0:
-      # size_name, r = random.choice(size_mapping)
-      size_name, r = size_mapping[1]
-    else:
-      size_name, r = size_mapping[0]
+    size_name, r = random.choice(size_mapping)
 
     # Try to place the object, ensuring that we don't intersect any existing
     # objects and that we are more than the desired margin away from all existing
@@ -370,12 +366,8 @@ def add_random_objects(scene_struct, num_objects, args, camera):
         for obj in blender_objects:
           utils.delete_object(obj)
         return add_random_objects(scene_struct, num_objects, args, camera)
-      if i == 0:
-        x = random.uniform(-1, 1)
-        y = random.uniform(0, 2)
-      else:
-        x = random.uniform(-3, 3)
-        y = random.uniform(-3, 1)
+      x = random.uniform(-3, 3)
+      y = random.uniform(-3, 3)
       # Check to make sure the new object is further than min_dist from all
       # other objects, and further than margin along the four cardinal directions
       dists_good = True
