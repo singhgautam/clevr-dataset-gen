@@ -15,11 +15,10 @@
     "yellow": [255, 238, 51]
   },
   "materials": {
-    "rubber": "Rubber",
     "metal": "MyMetal"
   },
   "sizes": {
     "large": 2.0,
-    "small": 1.0
+    "small": 0.5
   }
 }

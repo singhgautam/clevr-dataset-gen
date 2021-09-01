@@ -66,7 +66,7 @@ parser.add_argument('--shape_color_combos_json', default=None,
 # Settings for objects
 parser.add_argument('--min_objects', default=2, type=int,
     help="The minimum number of objects to place in each scene")
-parser.add_argument('--max_objects', default=2, type=int,
+parser.add_argument('--max_objects', default=3, type=int,
     help="The maximum number of objects to place in each scene")
 parser.add_argument('--min_dist', default=0.0, type=float,
     help="The minimum allowed distance between object centers")
@@ -74,7 +74,7 @@ parser.add_argument('--margin', default=0.0, type=float,
     help="Along all cardinal directions (left, right, front, back), all " +
          "objects will be at least this distance apart. This makes resolving " +
          "spatial relationships slightly less ambiguous.")
-parser.add_argument('--min_pixels_per_object', default=200, type=int,
+parser.add_argument('--min_pixels_per_object', default=0, type=int,
     help="All objects will have at least this many visible pixels in the " +
          "final rendered images; this ensures that no objects are fully " +
          "occluded by other objects.")
