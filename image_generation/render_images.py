@@ -64,7 +64,7 @@ parser.add_argument('--shape_color_combos_json', default=None,
          "for CLEVR-CoGenT.")
 
 # Settings for objects
-parser.add_argument('--min_objects', default=3, type=int,
+parser.add_argument('--min_objects', default=2, type=int,
     help="The minimum number of objects to place in each scene")
 parser.add_argument('--max_objects', default=4, type=int,
     help="The maximum number of objects to place in each scene")
