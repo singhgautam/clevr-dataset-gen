@@ -353,7 +353,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
   for i in range(num_objects):
     # Choose a random size
     # size_name, r = random.choice(size_mapping)
-    size_name, r = "null", 1.5 + 0.5 * random.random()
+    size_name, r = "null", (1.5 + 0.5 * random.random())
 
     # Try to place the object, ensuring that we don't intersect any existing
     # objects and that we are more than the desired margin away from all existing
