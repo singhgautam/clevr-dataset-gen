@@ -370,8 +370,12 @@ def add_random_objects(scene_struct, num_objects, args, camera):
         for obj in blender_objects:
           utils.delete_object(obj)
         return add_random_objects(scene_struct, num_objects, args, camera)
-      x = random.uniform(-3, 3)
-      y = random.uniform(-3, 3)
+      if i == 0:
+        x = random.uniform(-1, 1)
+        y = random.uniform(0, 2)
+      else:
+        x = random.uniform(-3, 3)
+        y = random.uniform(-3, 1)
       # Check to make sure the new object is further than min_dist from all
       # other objects, and further than margin along the four cardinal directions
       dists_good = True
