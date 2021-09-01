@@ -66,7 +66,7 @@ parser.add_argument('--shape_color_combos_json', default=None,
 # Settings for objects
 parser.add_argument('--min_objects', default=2, type=int,
     help="The minimum number of objects to place in each scene")
-parser.add_argument('--max_objects', default=4, type=int,
+parser.add_argument('--max_objects', default=3, type=int,
     help="The maximum number of objects to place in each scene")
 parser.add_argument('--min_dist', default=0.0, type=float,
     help="The minimum allowed distance between object centers")
@@ -74,7 +74,7 @@ parser.add_argument('--margin', default=0.0, type=float,
     help="Along all cardinal directions (left, right, front, back), all " +
          "objects will be at least this distance apart. This makes resolving " +
          "spatial relationships slightly less ambiguous.")
-parser.add_argument('--min_pixels_per_object', default=0, type=int,
+parser.add_argument('--min_pixels_per_object', default=100, type=int,
     help="All objects will have at least this many visible pixels in the " +
          "final rendered images; this ensures that no objects are fully " +
          "occluded by other objects.")
@@ -367,8 +367,8 @@ def add_random_objects(scene_struct, num_objects, args, camera):
         for obj in blender_objects:
           utils.delete_object(obj)
         return add_random_objects(scene_struct, num_objects, args, camera)
-      x = random.uniform(-3, 3)
-      y = random.uniform(-3, 3)
+      x = random.uniform(-4, 4)
+      y = random.uniform(-3, 4)
       # Check to make sure the new object is further than min_dist from all
       # other objects, and further than margin along the four cardinal directions
       dists_good = True
