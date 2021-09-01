@@ -64,13 +64,13 @@ parser.add_argument('--shape_color_combos_json', default=None,
          "for CLEVR-CoGenT.")
 
 # Settings for objects
-parser.add_argument('--min_objects', default=1, type=int,
+parser.add_argument('--min_objects', default=2, type=int,
     help="The minimum number of objects to place in each scene")
-parser.add_argument('--max_objects', default=1, type=int,
+parser.add_argument('--max_objects', default=2, type=int,
     help="The maximum number of objects to place in each scene")
-parser.add_argument('--min_dist', default=0.25, type=float,
+parser.add_argument('--min_dist', default=0.0, type=float,
     help="The minimum allowed distance between object centers")
-parser.add_argument('--margin', default=0.4, type=float,
+parser.add_argument('--margin', default=0.0, type=float,
     help="Along all cardinal directions (left, right, front, back), all " +
          "objects will be at least this distance apart. This makes resolving " +
          "spatial relationships slightly less ambiguous.")
