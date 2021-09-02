@@ -153,7 +153,7 @@ parser.add_argument('--render_tile_size', default=256, type=int,
          "while larger tile sizes may be optimal for GPU-based rendering.")
 
 def main(args):
-  num_digits = 6
+  num_digits = 10
   prefix = '%s_%s_' % (args.filename_prefix, args.split)
   img_template = '%s%%0%dd.png' % (prefix, num_digits)
   scene_template = '%s%%0%dd.json' % (prefix, num_digits)
@@ -171,16 +171,17 @@ def main(args):
   
   all_scene_paths = []
   for i in range(args.num_images):
-    img_path = img_template % (i + args.start_idx)
-    scene_path = scene_template % (i + args.start_idx)
+    img_code = random.randint(0, 10**num_digits)
+    img_path = img_template % img_code
+    scene_path = scene_template % img_code
     all_scene_paths.append(scene_path)
     blend_path = None
     if args.save_blendfiles == 1:
-      blend_path = blend_template % (i + args.start_idx)
+      blend_path = blend_template % img_code
     num_objects = random.randint(args.min_objects, args.max_objects)
     render_scene(args,
       num_objects=num_objects,
-      output_index=(i + args.start_idx),
+      output_index=img_code,
       output_split=args.split,
       output_image=img_path,
       output_scene=scene_path,
