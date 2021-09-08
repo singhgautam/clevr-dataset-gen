@@ -64,17 +64,17 @@ parser.add_argument('--shape_color_combos_json', default=None,
          "for CLEVR-CoGenT.")
 
 # Settings for objects
-parser.add_argument('--min_objects', default=2, type=int,
+parser.add_argument('--min_objects', default=3, type=int,
     help="The minimum number of objects to place in each scene")
-parser.add_argument('--max_objects', default=3, type=int,
+parser.add_argument('--max_objects', default=6, type=int,
     help="The maximum number of objects to place in each scene")
-parser.add_argument('--min_dist', default=0.0, type=float,
+parser.add_argument('--min_dist', default=0.25, type=float,
     help="The minimum allowed distance between object centers")
-parser.add_argument('--margin', default=0.0, type=float,
+parser.add_argument('--margin', default=0.4, type=float,
     help="Along all cardinal directions (left, right, front, back), all " +
          "objects will be at least this distance apart. This makes resolving " +
          "spatial relationships slightly less ambiguous.")
-parser.add_argument('--min_pixels_per_object', default=100, type=int,
+parser.add_argument('--min_pixels_per_object', default=200, type=int,
     help="All objects will have at least this many visible pixels in the " +
          "final rendered images; this ensures that no objects are fully " +
          "occluded by other objects.")
@@ -95,13 +95,13 @@ parser.add_argument('--split', default='new',
     help="Name of the split for which we are rendering. This will be added to " +
          "the names of rendered images, and will also be stored in the JSON " +
          "scene structure for each image.")
-parser.add_argument('--output_image_dir', default='../output/images/',
+parser.add_argument('--output_image_dir', default='../output_3_to_6/images/',
     help="The directory where output images will be stored. It will be " +
          "created if it does not exist.")
-parser.add_argument('--output_scene_dir', default='../output/scenes/',
+parser.add_argument('--output_scene_dir', default='../output_3_to_6/scenes/',
     help="The directory where output JSON scene structures will be stored. " +
          "It will be created if it does not exist.")
-parser.add_argument('--output_scene_file', default='../output/CLEVR_scenes.json',
+parser.add_argument('--output_scene_file', default='../output_3_to_6/CLEVR_scenes.json',
     help="Path to write a single JSON file containing all scene information")
 parser.add_argument('--output_blend_dir', default='output/blendfiles',
     help="The directory where blender scene files will be stored, if the " +
@@ -353,8 +353,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
   blender_objects = []
   for i in range(num_objects):
     # Choose a random size
-    # size_name, r = random.choice(size_mapping)
-    size_name, r = "null", (1.5 + 0.5 * random.random())
+    size_name, r = random.choice(size_mapping)
 
     # Try to place the object, ensuring that we don't intersect any existing
     # objects and that we are more than the desired margin away from all existing
@@ -368,8 +367,8 @@ def add_random_objects(scene_struct, num_objects, args, camera):
         for obj in blender_objects:
           utils.delete_object(obj)
         return add_random_objects(scene_struct, num_objects, args, camera)
-      x = random.uniform(-4, 4)
-      y = random.uniform(-3, 4)
+      x = random.uniform(-3, 3)
+      y = random.uniform(-3, 3)
       # Check to make sure the new object is further than min_dist from all
       # other objects, and further than margin along the four cardinal directions
       dists_good = True
