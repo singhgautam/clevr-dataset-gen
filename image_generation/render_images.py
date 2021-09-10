@@ -146,7 +146,7 @@ parser.add_argument('--render_min_bounces', default=8, type=int,
     help="The minimum number of bounces to use for rendering.")
 parser.add_argument('--render_max_bounces', default=8, type=int,
     help="The maximum number of bounces to use for rendering.")
-parser.add_argument('--render_tile_size', default=256, type=int,
+parser.add_argument('--render_tile_size', default=512, type=int,
     help="The tile size to use for rendering. This should not affect the " +
          "quality of the rendered image but may affect the speed; CPU-based " +
          "rendering may achieve better performance using smaller tile sizes " +
