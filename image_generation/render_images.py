@@ -70,7 +70,7 @@ parser.add_argument('--max_objects', default=6, type=int,
     help="The maximum number of objects to place in each scene")
 parser.add_argument('--min_dist', default=0.25, type=float,
     help="The minimum allowed distance between object centers")
-parser.add_argument('--margin', default=0.0, type=float,
+parser.add_argument('--margin', default=0.25, type=float,
     help="Along all cardinal directions (left, right, front, back), all " +
          "objects will be at least this distance apart. This makes resolving " +
          "spatial relationships slightly less ambiguous.")
@@ -95,13 +95,13 @@ parser.add_argument('--split', default='new',
     help="Name of the split for which we are rendering. This will be added to " +
          "the names of rendered images, and will also be stored in the JSON " +
          "scene structure for each image.")
-parser.add_argument('--output_image_dir', default='../output_3_to_6/images/',
+parser.add_argument('--output_image_dir', default='../output_3_to_6_new/images/',
     help="The directory where output images will be stored. It will be " +
          "created if it does not exist.")
-parser.add_argument('--output_scene_dir', default='../output_3_to_6/scenes/',
+parser.add_argument('--output_scene_dir', default='../output_3_to_6_new/scenes/',
     help="The directory where output JSON scene structures will be stored. " +
          "It will be created if it does not exist.")
-parser.add_argument('--output_scene_file', default='../output_3_to_6/CLEVR_scenes.json',
+parser.add_argument('--output_scene_file', default='../output_3_to_6_new/CLEVR_scenes.json',
     help="Path to write a single JSON file containing all scene information")
 parser.add_argument('--output_blend_dir', default='output/blendfiles',
     help="The directory where blender scene files will be stored, if the " +
