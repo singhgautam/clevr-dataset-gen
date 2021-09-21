@@ -95,13 +95,13 @@ parser.add_argument('--split', default='new',
     help="Name of the split for which we are rendering. This will be added to " +
          "the names of rendered images, and will also be stored in the JSON " +
          "scene structure for each image.")
-parser.add_argument('--output_image_dir', default='../output_3_to_6_new/images/',
+parser.add_argument('--output_image_dir', default='../output_3_to_6_mirror/images/',
     help="The directory where output images will be stored. It will be " +
          "created if it does not exist.")
-parser.add_argument('--output_scene_dir', default='../output_3_to_6_new/scenes/',
+parser.add_argument('--output_scene_dir', default='../output_3_to_6_mirror/scenes/',
     help="The directory where output JSON scene structures will be stored. " +
          "It will be created if it does not exist.")
-parser.add_argument('--output_scene_file', default='../output_3_to_6_new/CLEVR_scenes.json',
+parser.add_argument('--output_scene_file', default='../output_3_to_6_mirror/CLEVR_scenes.json',
     help="Path to write a single JSON file containing all scene information")
 parser.add_argument('--output_blend_dir', default='output/blendfiles',
     help="The directory where blender scene files will be stored, if the " +
@@ -351,6 +351,13 @@ def add_random_objects(scene_struct, num_objects, args, camera):
   positions = []
   objects = []
   blender_objects = []
+
+  # Add Mirror
+  mirror_theta = random.uniform(45, 135)
+  mirror_x = 3 * math.sqrt(2) * math.cos(mirror_theta * 2 * math.pi / 360)
+  mirror_y = 3 * math.sqrt(2) * math.sin(mirror_theta * 2 * math.pi / 360)
+  utils.add_object(args.shape_dir, "Mirror", 1, (mirror_x, mirror_y), theta=mirror_theta)
+  utils.add_material("MyMetal", Color=color_name_to_rgba["gray"])
   for i in range(num_objects):
     # Choose a random size
     size_name, r = random.choice(size_mapping)
