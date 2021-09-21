@@ -357,7 +357,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
   mirror_x = 3 * math.sqrt(2) * math.cos(mirror_theta * math.pi / 180.)
   mirror_y = 3 * math.sqrt(2) * math.sin(mirror_theta * math.pi / 180.)
   # utils.add_object(args.shape_dir, "Mirror", 2.5, (0, 5), theta=90)
-  utils.add_object(args.shape_dir, "Mirror", 2.5, (5, 0), theta=0)
+  utils.add_object(args.shape_dir, "Mirror", 2.5, (3.6, 3.6), theta=45)
   obj = bpy.context.object
   blender_objects.append(obj)
   utils.add_material("MyMetal", Color=color_name_to_rgba["gray"])
