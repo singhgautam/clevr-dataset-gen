@@ -361,7 +361,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
   utils.add_object(args.shape_dir, "Mirror", 2.5, (mirror_offset, 5), theta=90)
   obj = bpy.context.object
   blender_objects.append(obj)
-  utils.add_material("MyMetal", Color=[0.95, 0.95, 0.95, 1.0])
+  utils.add_material("MyMetal", Color=[0.9, 0.9, 0.9, 1.0])
   for i in range(num_objects):
     # Choose a random size
     size_name, r = random.choice(size_mapping)
