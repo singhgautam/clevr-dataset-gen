@@ -66,7 +66,7 @@ parser.add_argument('--shape_color_combos_json', default=None,
 # Settings for objects
 parser.add_argument('--min_objects', default=3, type=int,
     help="The minimum number of objects to place in each scene")
-parser.add_argument('--max_objects', default=6, type=int,
+parser.add_argument('--max_objects', default=8, type=int,
     help="The maximum number of objects to place in each scene")
 parser.add_argument('--min_dist', default=0.25, type=float,
     help="The minimum allowed distance between object centers")
@@ -95,13 +95,13 @@ parser.add_argument('--split', default='new',
     help="Name of the split for which we are rendering. This will be added to " +
          "the names of rendered images, and will also be stored in the JSON " +
          "scene structure for each image.")
-parser.add_argument('--output_image_dir', default='../output_3_to_6_mirror_test/images/',
+parser.add_argument('--output_image_dir', default='../output_3_to_8_mirror_test/images/',
     help="The directory where output images will be stored. It will be " +
          "created if it does not exist.")
-parser.add_argument('--output_scene_dir', default='../output_3_to_6_mirror_test/scenes/',
+parser.add_argument('--output_scene_dir', default='../output_3_to_8_mirror_test/scenes/',
     help="The directory where output JSON scene structures will be stored. " +
          "It will be created if it does not exist.")
-parser.add_argument('--output_scene_file', default='../output_3_to_6_mirror_test/CLEVR_scenes.json',
+parser.add_argument('--output_scene_file', default='../output_3_to_8_mirror_test/CLEVR_scenes.json',
     help="Path to write a single JSON file containing all scene information")
 parser.add_argument('--output_blend_dir', default='output/blendfiles',
     help="The directory where blender scene files will be stored, if the " +
