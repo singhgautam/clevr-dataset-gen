@@ -82,6 +82,20 @@ parser.add_argument('--max_retries', default=50, type=int,
     help="The number of times to try placing an object before giving up and " +
          "re-placing all objects in the scene.")
 
+# Settings for mirror
+parser.add_argument('--mirror_angle', default=90, type=float,
+    help="The angle of the mirror")
+parser.add_argument('--mirror_x_min', default=-7, type=float,
+    help="The minimum x-coordinate of the mirror")
+parser.add_argument('--mirror_x_max', default=0, type=float,
+    help="The maximum x-coordinate of the mirror")
+parser.add_argument('--mirror_y_min', default=5, type=float,
+    help="The minimum x-coordinate of the mirror")
+parser.add_argument('--mirror_y_max', default=5, type=float,
+    help="The maximum x-coordinate of the mirror")
+parser.add_argument('--mirror_size', default=2.5, type=float,
+    help="The size of the mirror")
+
 # Output settings
 parser.add_argument('--start_idx', default=0, type=int,
     help="The index at which to start for numbering rendered images. Setting " +
@@ -353,15 +367,15 @@ def add_random_objects(scene_struct, num_objects, args, camera):
   blender_objects = []
 
   # Add Mirror
-  mirror_theta = 180
-  mirror_x = 3 * math.sqrt(2) * math.cos(mirror_theta * math.pi / 180.)
-  mirror_y = 3 * math.sqrt(2) * math.sin(mirror_theta * math.pi / 180.)
-  # utils.add_object(args.shape_dir, "Mirror", 2.5, (0, 5), theta=90)
-  mirror_offset = random.uniform(-7, 0)
-  utils.add_object(args.shape_dir, "Mirror", 2.5, (mirror_offset, 5), theta=90)
+  mirror_r = args.mirror_size
+  mirror_x = random.uniform(args.mirror_x_min, args.mirror_x_max)
+  mirror_y = random.uniform(args.mirror_y_min, args.mirror_y_max)
+  mirror_angle = args.mirror_angle
+  mirror_color = [0.5, 0.5, 0.5, 1.0]
+  utils.add_object(args.shape_dir, "Mirror", mirror_r, (mirror_x, mirror_y), theta=mirror_angle)
   obj = bpy.context.object
   blender_objects.append(obj)
-  utils.add_material("MyMetal", Color=[0.5, 0.5, 0.5, 1.0])
+  utils.add_material("MyMetal", Color=mirror_color)
   for i in range(num_objects):
     # Choose a random size
     size_name, r = random.choice(size_mapping)
