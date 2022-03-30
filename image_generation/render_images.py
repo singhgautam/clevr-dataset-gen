@@ -95,13 +95,13 @@ parser.add_argument('--split', default='new',
     help="Name of the split for which we are rendering. This will be added to " +
          "the names of rendered images, and will also be stored in the JSON " +
          "scene structure for each image.")
-parser.add_argument('--output_image_dir', default='../output/images/',
+parser.add_argument('--output_image_dir', default='/data/local/gs790/idalle/datasets/clevrmetal-with-masks-001/images/',
     help="The directory where output images will be stored. It will be " +
          "created if it does not exist.")
-parser.add_argument('--output_scene_dir', default='../output/scenes/',
+parser.add_argument('--output_scene_dir', default='/data/local/gs790/idalle/datasets/clevrmetal-with-masks-001/scenes/',
     help="The directory where output JSON scene structures will be stored. " +
          "It will be created if it does not exist.")
-parser.add_argument('--output_scene_file', default='../output/CLEVR_scenes.json',
+parser.add_argument('--output_scene_file', default='/data/local/gs790/idalle/datasets/clevrmetal-with-masks-001/CLEVR_scenes.json',
     help="Path to write a single JSON file containing all scene information")
 parser.add_argument('--output_blend_dir', default='output/blendfiles',
     help="The directory where blender scene files will be stored, if the " +
@@ -156,9 +156,11 @@ def main(args):
   num_digits = 10
   prefix = '%s_%s_' % (args.filename_prefix, args.split)
   img_template = '%s%%0%dd.png' % (prefix, num_digits)
+  mask_template = '%s%%0%dd_mask.png' % (prefix, num_digits)
   scene_template = '%s%%0%dd.json' % (prefix, num_digits)
   blend_template = '%s%%0%dd.blend' % (prefix, num_digits)
   img_template = os.path.join(args.output_image_dir, img_template)
+  mask_template = os.path.join(args.output_image_dir, mask_template)
   scene_template = os.path.join(args.output_scene_dir, scene_template)
   blend_template = os.path.join(args.output_blend_dir, blend_template)
 
@@ -173,6 +175,7 @@ def main(args):
   for i in range(args.num_images):
     img_code = random.randint(0, 10**num_digits)
     img_path = img_template % img_code
+    mask_path = mask_template % img_code
     scene_path = scene_template % img_code
     all_scene_paths.append(scene_path)
     blend_path = None
@@ -184,6 +187,7 @@ def main(args):
       output_index=img_code,
       output_split=args.split,
       output_image=img_path,
+      output_mask=mask_path,
       output_scene=scene_path,
       output_blendfile=blend_path,
     )
@@ -213,6 +217,7 @@ def render_scene(args,
     output_index=0,
     output_split='none',
     output_image='render.png',
+    output_mask='mask.png',
     output_scene='render_json',
     output_blendfile=None,
   ):
@@ -308,7 +313,7 @@ def render_scene(args,
       bpy.data.objects['Lamp_Fill'].location[i] += rand(args.fill_light_jitter)
 
   # Now make some random objects
-  objects, blender_objects = add_random_objects(scene_struct, num_objects, args, camera)
+  objects, blender_objects = add_random_objects(scene_struct, num_objects, args, output_mask, camera)
 
   # Render the scene and dump the scene data structure
   scene_struct['objects'] = objects
@@ -327,7 +332,7 @@ def render_scene(args,
     bpy.ops.wm.save_as_mainfile(filepath=output_blendfile)
 
 
-def add_random_objects(scene_struct, num_objects, args, camera):
+def add_random_objects(scene_struct, num_objects, args, output_mask, camera):
   """
   Add random objects to the current blender scene
   """
@@ -435,7 +440,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
     })
 
   # Check that all objects are at least partially visible in the rendered image
-  all_visible = check_visibility(blender_objects, args.min_pixels_per_object)
+  all_visible = check_visibility(blender_objects, output_mask, args.min_pixels_per_object)
   if not all_visible:
     # If any of the objects are fully occluded then start over; delete all
     # objects from the scene and place them all again.
@@ -474,7 +479,7 @@ def compute_all_relationships(scene_struct, eps=0.2):
   return all_relationships
 
 
-def check_visibility(blender_objects, min_pixels_per_object):
+def check_visibility(blender_objects, output_mask, min_pixels_per_object):
   """
   Check whether all objects in the scene have some minimum number of visible
   pixels; to accomplish this we assign random (but distinct) colors to all
@@ -485,18 +490,20 @@ def check_visibility(blender_objects, min_pixels_per_object):
 
   Returns True if all objects are visible and False otherwise.
   """
-  f, path = tempfile.mkstemp(suffix='.png')
-  object_colors = render_shadeless(blender_objects, path=path)
-  img = bpy.data.images.load(path)
+  object_colors = render_shadeless(blender_objects, path=output_mask)
+  img = bpy.data.images.load(output_mask)
   p = list(img.pixels)
+
   color_count = Counter((p[i], p[i+1], p[i+2], p[i+3])
                         for i in range(0, len(p), 4))
-  os.remove(path)
+
   if len(color_count) != len(blender_objects) + 1:
     return False
+
   for _, count in color_count.most_common():
     if count < min_pixels_per_object:
       return False
+
   return True
 
 
@@ -534,7 +541,10 @@ def render_shadeless(blender_objects, path='flat.png'):
     mat = bpy.data.materials['Material']
     mat.name = 'Material_%d' % i
     while True:
-      r, g, b = [random.random() for _ in range(3)]
+      color = [0, 0, 0]
+      color[i] = 1
+      r, g, b = tuple(color)
+
       if (r, g, b) not in object_colors: break
     object_colors.add((r, g, b))
     mat.diffuse_color = [r, g, b]
