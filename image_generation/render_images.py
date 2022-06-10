@@ -64,9 +64,9 @@ parser.add_argument('--shape_color_combos_json', default=None,
          "for CLEVR-CoGenT.")
 
 # Settings for objects
-parser.add_argument('--min_objects', default=1, type=int,
+parser.add_argument('--min_objects', default=2, type=int,
     help="The minimum number of objects to place in each scene")
-parser.add_argument('--max_objects', default=1, type=int,
+parser.add_argument('--max_objects', default=3, type=int,
     help="The maximum number of objects to place in each scene")
 parser.add_argument('--min_dist', default=0.0, type=float,
     help="The minimum allowed distance between object centers")
@@ -95,13 +95,13 @@ parser.add_argument('--split', default='new',
     help="Name of the split for which we are rendering. This will be added to " +
          "the names of rendered images, and will also be stored in the JSON " +
          "scene structure for each image.")
-parser.add_argument('--output_image_dir', default='/data/local/gs790/idalle/datasets/clevrmetal-with-masks-002-correlated-training-set/images/',
+parser.add_argument('--output_image_dir', default='/data/local/gs790/idalle/datasets/clevrmetal-with-masks-002-correlated-eval-set/images/',
     help="The directory where output images will be stored. It will be " +
          "created if it does not exist.")
-parser.add_argument('--output_scene_dir', default='/data/local/gs790/idalle/datasets/clevrmetal-with-masks-002-correlated-training-set/scenes/',
+parser.add_argument('--output_scene_dir', default='/data/local/gs790/idalle/datasets/clevrmetal-with-masks-002-correlated-eval-set/scenes/',
     help="The directory where output JSON scene structures will be stored. " +
          "It will be created if it does not exist.")
-parser.add_argument('--output_scene_file', default='/data/local/gs790/idalle/datasets/clevrmetal-with-masks-002-correlated-training-set/CLEVR_scenes.json',
+parser.add_argument('--output_scene_file', default='/data/local/gs790/idalle/datasets/clevrmetal-with-masks-002-correlated-eval-set/CLEVR_scenes.json',
     help="Path to write a single JSON file containing all scene information")
 parser.add_argument('--output_blend_dir', default='output/blendfiles',
     help="The directory where blender scene files will be stored, if the " +
@@ -373,8 +373,8 @@ def add_random_objects(scene_struct, num_objects, args, output_mask, camera):
         for obj in blender_objects:
           utils.delete_object(obj)
         return add_random_objects(scene_struct, num_objects, args, camera)
-      x = random.uniform(3, 4)
-      y = random.uniform(3, 4)
+      x = random.uniform(-4, 3)
+      y = random.uniform(-3, 3)
       # Check to make sure the new object is further than min_dist from all
       # other objects, and further than margin along the four cardinal directions
       dists_good = True
