@@ -95,13 +95,13 @@ parser.add_argument('--split', default='new',
     help="Name of the split for which we are rendering. This will be added to " +
          "the names of rendered images, and will also be stored in the JSON " +
          "scene structure for each image.")
-parser.add_argument('--output_image_dir', default='/research/projects/object_centric/gs790/idalle/datasets/clevr-big-with-masks-001/images/',
+parser.add_argument('--output_image_dir', default='/research/projects/object_centric/gs790/idalle/datasets/clevr-big-with-masks-002/images/',
     help="The directory where output images will be stored. It will be " +
          "created if it does not exist.")
-parser.add_argument('--output_scene_dir', default='/research/projects/object_centric/gs790/idalle/datasets/clevr-big-with-masks-001/scenes/',
+parser.add_argument('--output_scene_dir', default='/research/projects/object_centric/gs790/idalle/datasets/clevr-big-with-masks-002/scenes/',
     help="The directory where output JSON scene structures will be stored. " +
          "It will be created if it does not exist.")
-parser.add_argument('--output_scene_file', default='/research/projects/object_centric/gs790/idalle/datasets/clevr-big-with-masks-001/CLEVR_scenes.json',
+parser.add_argument('--output_scene_file', default='/research/projects/object_centric/gs790/idalle/datasets/clevr-big-with-masks-002/CLEVR_scenes.json',
     help="Path to write a single JSON file containing all scene information")
 parser.add_argument('--output_blend_dir', default='output/blendfiles',
     help="The directory where blender scene files will be stored, if the " +
@@ -360,6 +360,7 @@ def add_random_objects(scene_struct, num_objects, args, output_mask, camera):
     # Choose a random size
     # size_name, r = random.choice(size_mapping)
     size_name, r = "null", (1.5 + 0.5 * random.random())
+    size_float = r
 
     # Try to place the object, ensuring that we don't intersect any existing
     # objects and that we are more than the desired margin away from all existing
@@ -431,7 +432,7 @@ def add_random_objects(scene_struct, num_objects, args, output_mask, camera):
     pixel_coords = utils.get_camera_coords(camera, obj.location)
     objects.append({
       'shape': obj_name_out,
-      'size': size_name,
+      'size': size_float,
       'material': mat_name_out,
       '3d_coords': tuple(obj.location),
       'rotation': theta,
