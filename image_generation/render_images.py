@@ -400,7 +400,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
         # if not margins_good:
         #   break
 
-      if dists_good and margins_good:
+      if dists_good:
         break
 
     # Choose random color and shape
