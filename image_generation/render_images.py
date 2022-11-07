@@ -68,7 +68,7 @@ parser.add_argument('--min_objects', default=2, type=int,
     help="The minimum number of objects to place in each scene")
 parser.add_argument('--max_objects', default=3, type=int,
     help="The maximum number of objects to place in each scene")
-parser.add_argument('--min_dist', default=0.0, type=float,
+parser.add_argument('--min_dist', default=2.0, type=float,
     help="The minimum allowed distance between object centers")
 parser.add_argument('--margin', default=0.0, type=float,
     help="Along all cardinal directions (left, right, front, back), all " +
@@ -385,7 +385,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
       for (xx, yy, rr) in positions:
         dx, dy = x - xx, y - yy
         dist = math.sqrt(dx * dx + dy * dy)
-        if dist - r - rr < args.min_dist:
+        if dist < args.min_dist:
           dists_good = False
           break
         # for direction_name in ['left', 'right', 'front', 'behind']:
@@ -439,21 +439,21 @@ def add_random_objects(scene_struct, num_objects, args, camera):
       'color': color_name,
     })
 
-    overlapping = False
-    for i in range(len(blender_objects) - 1):
-      for j in range(i + 1, len(blender_objects)):
-        r_i = (np.asarray(blender_objects[i].dimensions[:]) ** 2).sum() ** 0.5
-        r_j = (np.asarray(blender_objects[j].dimensions[:]) ** 2).sum() ** 0.5
-        dist = (np.asarray(blender_objects[i].location[:]) - np.asarray(blender_objects[j].location[:]))
-        dist = (dist ** 2).sum() ** 0.5
-        if dist < r_i + r_j:
-          print('Overlapping: ', np.asarray(blender_objects[i].dimensions[:]), np.asarray(blender_objects[j].dimensions[:]), np.asarray(blender_objects[i].location[:]), np.asarray(blender_objects[j].location[:]))
-          overlapping = True
-
-    if overlapping:
-      for obj in blender_objects:
-        utils.delete_object(obj)
-      return add_random_objects(scene_struct, num_objects, args, camera)
+    # overlapping = False
+    # for i in range(len(blender_objects) - 1):
+    #   for j in range(i + 1, len(blender_objects)):
+    #     r_i = (np.asarray(blender_objects[i].dimensions[:]) ** 2).sum() ** 0.5
+    #     r_j = (np.asarray(blender_objects[j].dimensions[:]) ** 2).sum() ** 0.5
+    #     dist = (np.asarray(blender_objects[i].location[:]) - np.asarray(blender_objects[j].location[:]))
+    #     dist = (dist ** 2).sum() ** 0.5
+    #     if dist < r_i + r_j:
+    #       print('Overlapping: ', np.asarray(blender_objects[i].dimensions[:]), np.asarray(blender_objects[j].dimensions[:]), np.asarray(blender_objects[i].location[:]), np.asarray(blender_objects[j].location[:]))
+    #       overlapping = True
+    #
+    # if overlapping:
+    #   for obj in blender_objects:
+    #     utils.delete_object(obj)
+    #   return add_random_objects(scene_struct, num_objects, args, camera)
 
 
   # Check that all objects are at least partially visible in the rendered image
