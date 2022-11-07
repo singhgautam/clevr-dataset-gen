@@ -415,7 +415,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
 
 
     # Choose random orientation for the object.
-    theta = 360.0 * random.random()
+    theta = [360.0 * random.random() for _ in range(3)]
 
     # Actually add the object to the scene
     utils.add_object(args.shape_dir, obj_name, r, (x, y), theta=theta)
@@ -434,7 +434,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
       'size': size_name,
       'material': "null",
       '3d_coords': tuple(obj.location),
-      'rotation': theta,
+      'rotation': tuple(theta),
       'pixel_coords': pixel_coords,
       'color': color_name,
     })

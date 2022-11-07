@@ -94,7 +94,7 @@ def add_object(filename, name, scale, loc, theta=0):
   x, y = loc
 
   # set pose
-  blender_obj.rotation_euler[2] = theta
+  blender_obj.rotation_euler = theta
   blender_obj.scale = [64.0 * scale, 64.0 * scale, 64.0 * scale]
   blender_obj.location = [x, y, 2.0]
 
