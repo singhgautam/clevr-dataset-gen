@@ -103,7 +103,8 @@ def add_object(filename, name, scale, loc, theta=0):
   blender_obj.rotation_euler = theta
   blender_obj.scale = [scale * factor, scale * factor, scale * factor]
 
-  bpy.ops.transform.translate(value=(x, y, 0))
+  bounds = np.asarray(blender_obj.dimensions[:])
+  bpy.ops.transform.translate(value=(x, y, bounds.max() ** np.sqrt(2)))
 
 
 
