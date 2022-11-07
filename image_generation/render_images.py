@@ -9,7 +9,7 @@ from __future__ import print_function
 import math, sys, random, argparse, json, os, tempfile
 from datetime import datetime as dt
 from collections import Counter
-
+import numpy as np
 """
 Renders random scenes using Blender, each with with a random number of objects;
 each object has a random size, position, color, and shape. Objects will be
@@ -68,7 +68,7 @@ parser.add_argument('--min_objects', default=2, type=int,
     help="The minimum number of objects to place in each scene")
 parser.add_argument('--max_objects', default=3, type=int,
     help="The maximum number of objects to place in each scene")
-parser.add_argument('--min_dist', default=0.8, type=float,
+parser.add_argument('--min_dist', default=0.0, type=float,
     help="The minimum allowed distance between object centers")
 parser.add_argument('--margin', default=0.0, type=float,
     help="Along all cardinal directions (left, right, front, back), all " +
@@ -438,6 +438,22 @@ def add_random_objects(scene_struct, num_objects, args, camera):
       'pixel_coords': pixel_coords,
       'color': color_name,
     })
+
+    overlapping = False
+    for i in range(len(blender_objects) - 1):
+      for j in range(i + 1, len(blender_objects)):
+        r_i = (np.asarray(blender_objects[i].dimensions[:]) ** 2).sum() ** 0.5
+        r_j = (np.asarray(blender_objects[j].dimensions[:]) ** 2).sum() ** 0.5
+        dist = (np.asarray(blender_objects[i].location[:]) - np.asarray(blender_objects[j].location[:]))
+        dist = (dist ** 2).sum() ** 0.5
+        if dist < r_i + r_j:
+          overlapping = True
+
+    if overlapping:
+      for obj in blender_objects:
+        utils.delete_object(obj)
+      return add_random_objects(scene_struct, num_objects, args, camera)
+
 
   # Check that all objects are at least partially visible in the rendered image
   # all_visible = check_visibility(blender_objects, args.min_pixels_per_object)
