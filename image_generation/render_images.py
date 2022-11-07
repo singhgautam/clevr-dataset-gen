@@ -78,7 +78,7 @@ parser.add_argument('--min_pixels_per_object', default=0, type=int,
     help="All objects will have at least this many visible pixels in the " +
          "final rendered images; this ensures that no objects are fully " +
          "occluded by other objects.")
-parser.add_argument('--max_retries', default=3, type=int,
+parser.add_argument('--max_retries', default=50, type=int,
     help="The number of times to try placing an object before giving up and " +
          "re-placing all objects in the scene.")
 
