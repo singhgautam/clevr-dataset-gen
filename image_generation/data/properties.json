@@ -148,6 +148,6 @@
     "metal": "MyMetal"
   },
   "sizes": {
-    "standard": 1.0
+    "standard": 100.0
   }
 }
