@@ -98,7 +98,7 @@ def add_object(filename, name, scale, loc, theta=0):
   # set pose
   bounds = np.asarray([blender_obj.bound_box[i][0:3] for i in range(8)])
   bounds = abs(bounds)
-  bounds = bounds.max()
+  bounds = bounds.max(0).min()
   blender_obj.rotation_euler = theta
   blender_obj.scale = [scale/bounds, scale/bounds, scale/bounds]
   blender_obj.location = [x, y, 2.0]
