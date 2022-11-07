@@ -388,15 +388,15 @@ def add_random_objects(scene_struct, num_objects, args, camera):
         if dist - r - rr < args.min_dist:
           dists_good = False
           break
-        for direction_name in ['left', 'right', 'front', 'behind']:
-          direction_vec = scene_struct['directions'][direction_name]
-          assert direction_vec[2] == 0
-          margin = dx * direction_vec[0] + dy * direction_vec[1]
-          if 0 < margin < args.margin:
-            print(margin, args.margin, direction_name)
-            print('BROKEN MARGIN!')
-            margins_good = False
-            break
+        # for direction_name in ['left', 'right', 'front', 'behind']:
+        #   direction_vec = scene_struct['directions'][direction_name]
+        #   assert direction_vec[2] == 0
+        #   margin = dx * direction_vec[0] + dy * direction_vec[1]
+        #   if 0 < margin < args.margin:
+        #     print(margin, args.margin, direction_name)
+        #     print('BROKEN MARGIN!')
+        #     margins_good = False
+        #     break
         if not margins_good:
           break
 
