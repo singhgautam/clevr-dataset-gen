@@ -413,9 +413,6 @@ def add_random_objects(scene_struct, num_objects, args, camera):
       obj_name = [k for k, v in object_mapping if v == obj_name_out][0]
       rgba = color_name_to_rgba[color_name]
 
-    # For cube, adjust the size a bit
-    if obj_name == 'Cube':
-      r /= math.sqrt(2)
 
     # Choose random orientation for the object.
     theta = 360.0 * random.random()

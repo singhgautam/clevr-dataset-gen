@@ -84,42 +84,22 @@ def add_object(filename, name, scale, loc, theta=0):
   - loc: tuple (x, y) giving the coordinates on the ground plane where the
     object should be placed.
   """
-  # First figure out how many of this object are already in the scene so we can
-  # give the new object a unique name
-  # count = 0
-  # for obj in bpy.data.objects:
-  #   if obj.name.startswith(name):
-  #     count += 1
 
   filename = '/common/home/gs790/git/clevr-dataset-gen/image_generation/data/gso/Android_Figure_Orange/visual_geometry.obj'
   bpy.ops.import_scene.obj(filepath=filename)
 
-  # Give it a new name to avoid conflicts
-  # new_name = '%s_%d' % (name, count)
-  # bpy.data.objects[name].name = new_name
-
   # Set the new object as active, then rotate, scale, and translate it
   assert len(bpy.context.selected_objects) == 1
   blender_obj = bpy.context.selected_objects[0]
-  # x, y = loc
-  x, y = 0,0
-  # bpy.context.scene.objects.active = bpy.data.objects[new_name]
+  x, y = loc
 
-  # set rotation
+  # set pose
   blender_obj.rotation_euler[2] = theta
-
-  # set scale
-  blender_obj.scale = [72, 72, 72]
-
-  # set position
-  blender_obj.location[0] = 0
-  blender_obj.location[1] = 0
-  blender_obj.location[2] = 0
+  blender_obj.scale = [72.0 * scale, 72.0 * scale, 72.0 * scale]
+  blender_obj.location = [x, y, 2.0]
 
   bpy.context.view_layer.objects.active = blender_obj
-  # import pdb; pdb.set_trace()
-  # bpy.ops.transform.resize(value=(scale, scale, scale))
-  # bpy.ops.transform.translate(value=(x, y, scale))
+
 
 
 def load_materials(material_dir):
