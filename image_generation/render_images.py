@@ -270,8 +270,8 @@ def render_scene(args,
   }
 
   # Put a plane on the ground so we can compute cardinal directions
-  bpy.ops.mesh.primitive_plane_add(size=5)
-  plane = bpy.context.object
+  # bpy.ops.mesh.primitive_plane_add(size=5)
+  # plane = bpy.context.object
 
   def rand(L):
     return 2.0 * L * (random.random() - 0.5)
@@ -284,25 +284,25 @@ def render_scene(args,
   # Figure out the left, up, and behind directions along the plane and record
   # them in the scene structure
   camera = bpy.data.objects['Camera']
-  plane_normal = plane.data.vertices[0].normal
-  cam_behind = camera.matrix_world.to_quaternion() * Vector((0, 0, -1))
-  cam_left = camera.matrix_world.to_quaternion() * Vector((-1, 0, 0))
-  cam_up = camera.matrix_world.to_quaternion() * Vector((0, 1, 0))
-  plane_behind = (cam_behind - cam_behind.project(plane_normal)).normalized()
-  plane_left = (cam_left - cam_left.project(plane_normal)).normalized()
-  plane_up = cam_up.project(plane_normal).normalized()
+  # plane_normal = plane.data.vertices[0].normal
+  # cam_behind = camera.matrix_world.to_quaternion() * Vector((0, 0, -1))
+  # cam_left = camera.matrix_world.to_quaternion() * Vector((-1, 0, 0))
+  # cam_up = camera.matrix_world.to_quaternion() * Vector((0, 1, 0))
+  # plane_behind = (cam_behind - cam_behind.project(plane_normal)).normalized()
+  # plane_left = (cam_left - cam_left.project(plane_normal)).normalized()
+  # plane_up = cam_up.project(plane_normal).normalized()
 
   # Delete the plane; we only used it for normals anyway. The base scene file
   # contains the actual ground plane.
-  utils.delete_object(plane)
+  # utils.delete_object(plane)
 
   # Save all six axis-aligned directions in the scene struct
-  scene_struct['directions']['behind'] = tuple(plane_behind)
-  scene_struct['directions']['front'] = tuple(-plane_behind)
-  scene_struct['directions']['left'] = tuple(plane_left)
-  scene_struct['directions']['right'] = tuple(-plane_left)
-  scene_struct['directions']['above'] = tuple(plane_up)
-  scene_struct['directions']['below'] = tuple(-plane_up)
+  # scene_struct['directions']['behind'] = tuple(plane_behind)
+  # scene_struct['directions']['front'] = tuple(-plane_behind)
+  # scene_struct['directions']['left'] = tuple(plane_left)
+  # scene_struct['directions']['right'] = tuple(-plane_left)
+  # scene_struct['directions']['above'] = tuple(plane_up)
+  # scene_struct['directions']['below'] = tuple(-plane_up)
 
   # Add random jitter to lamp positions
   if args.key_light_jitter > 0:
