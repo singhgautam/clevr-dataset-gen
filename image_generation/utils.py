@@ -85,7 +85,11 @@ def add_object(filename, name, scale, loc, theta=0):
     object should be placed.
   """
 
-  filename = '/common/home/gs790/git/clevr-dataset-gen/image_generation/data/gso/Android_Figure_Orange/visual_geometry.obj'
+  filename = random.choice([
+    '/common/home/gs790/git/clevr-dataset-gen/image_generation/data/gso/Android_Figure_Orange',
+    '/common/home/gs790/git/clevr-dataset-gen/image_generation/data/gso/FARM_ANIMAL',
+  ])
+  filename = os.path.join(filename, 'visual_geometry.obj')
   bpy.ops.import_scene.obj(filepath=filename)
 
   # Set the new object as active, then rotate, scale, and translate it
