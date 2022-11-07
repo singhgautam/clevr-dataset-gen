@@ -86,21 +86,21 @@ def add_object(filename, name, scale, loc, theta=0):
   """
   # First figure out how many of this object are already in the scene so we can
   # give the new object a unique name
-  count = 0
-  for obj in bpy.data.objects:
-    if obj.name.startswith(name):
-      count += 1
+  # count = 0
+  # for obj in bpy.data.objects:
+  #   if obj.name.startswith(name):
+  #     count += 1
 
   filename = '/common/home/gs790/downloads/Android_Figure_Orange/visual_geometry.obj'
   bpy.ops.import_scene.obj(filepath=filename)
 
   # Give it a new name to avoid conflicts
-  new_name = '%s_%d' % (name, count)
-  bpy.data.objects[name].name = new_name
+  # new_name = '%s_%d' % (name, count)
+  # bpy.data.objects[name].name = new_name
 
   # Set the new object as active, then rotate, scale, and translate it
   x, y = loc
-  bpy.context.scene.objects.active = bpy.data.objects[new_name]
+  # bpy.context.scene.objects.active = bpy.data.objects[new_name]
   bpy.context.object.rotation_euler[2] = theta
   bpy.ops.transform.resize(value=(scale, scale, scale))
   bpy.ops.transform.translate(value=(x, y, scale))
