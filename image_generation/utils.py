@@ -109,7 +109,7 @@ def add_object(filename, name, scale, loc, theta=0):
   blender_obj.rotation_euler[2] = theta
 
   # set scale
-  blender_obj.scale = [100, 100, 100]
+  blender_obj.scale = [72, 72, 72]
 
   # set position
   blender_obj.location[0] = 0
