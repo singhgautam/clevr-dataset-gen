@@ -91,7 +91,7 @@ def add_object(filename, name, scale, loc, theta=0):
   #   if obj.name.startswith(name):
   #     count += 1
 
-  filename = 'gso/Android_Figure_Orange/visual_geometry.obj'
+  filename = '/common/home/gs790/git/clevr-dataset-gen/image_generation/data/gso/Android_Figure_Orange/visual_geometry.obj'
   bpy.ops.import_scene.obj(filepath=filename)
 
   # Give it a new name to avoid conflicts
