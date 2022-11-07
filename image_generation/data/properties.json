@@ -148,15 +148,6 @@
     "metal": "MyMetal"
   },
   "sizes": {
-    "size-01": 1.1,
-    "size-02": 1.2,
-    "size-03": 1.3,
-    "size-04": 1.4,
-    "size-05": 1.5,
-    "size-06": 1.6,
-    "size-07": 1.7,
-    "size-08": 1.8,
-    "size-09": 1.9,
-    "size-10": 2.0
+    "standard": 15.0
   }
 }
