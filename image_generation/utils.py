@@ -116,6 +116,8 @@ def add_object(filename, name, scale, loc, theta=0):
   blender_obj.location[1] = 0
   blender_obj.location[2] = 0
 
+  import pdb; pdb.set_trace()
+
   bpy.context.scene.objects.active = blender_obj
 
   # bpy.ops.transform.resize(value=(scale, scale, scale))
