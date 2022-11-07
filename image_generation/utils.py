@@ -99,6 +99,9 @@ def add_object(filename, name, scale, loc, theta=0):
   # bpy.data.objects[name].name = new_name
 
   # Set the new object as active, then rotate, scale, and translate it
+  assert len(bpy.context.selected_objects) == 1
+  blender_obj = bpy.context.selected_objects[0]
+  import pdb; pdb.set_trace()
   x, y = loc
   # bpy.context.scene.objects.active = bpy.data.objects[new_name]
   bpy.context.object.rotation_euler[2] = theta
