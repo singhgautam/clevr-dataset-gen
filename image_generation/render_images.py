@@ -232,8 +232,8 @@ def render_scene(args,
   render_args.resolution_x = args.width
   render_args.resolution_y = args.height
   render_args.resolution_percentage = 100
-  render_args.tile_x = args.render_tile_size
-  render_args.tile_y = args.render_tile_size
+  # render_args.tile_x = args.render_tile_size
+  # render_args.tile_y = args.render_tile_size
   if args.use_gpu == 1:
     # Blender changed the API for enabling CUDA at some point
     if bpy.app.version < (2, 78, 0):
