@@ -84,11 +84,9 @@ def add_object(filename, name, scale, loc, theta=0):
   - loc: tuple (x, y) giving the coordinates on the ground plane where the
     object should be placed.
   """
-
-  filename = random.choice([
-    '/common/home/gs790/git/clevr-dataset-gen/image_generation/data/gso/Android_Figure_Orange',
-    '/common/home/gs790/git/clevr-dataset-gen/image_generation/data/gso/FARM_ANIMAL',
-  ])
+  gso_dir = '/common/home/gs790/git/clevr-dataset-gen/image_generation/data/gso/'
+  gso_objects = [f.path for f in os.scandir(gso_dir) if f.is_dir()]
+  filename = random.choice(gso_objects)
   filename = os.path.join(filename, 'visual_geometry.obj')
   bpy.ops.import_scene.obj(filepath=filename)
 
