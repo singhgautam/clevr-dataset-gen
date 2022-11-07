@@ -230,7 +230,7 @@ def render_scene(args,
                          args.render_num_samples,
                          args.render_min_bounces,
                          args.render_max_bounces,
-                         use_gpu=args.gpu)
+                         use_gpu=args.use_gpu)
   # Set render arguments so we can get pixel coordinates later.
   # We use functionality specific to the CYCLES renderer so BLENDER_RENDER
   # cannot be used.
