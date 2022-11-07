@@ -101,7 +101,9 @@ def add_object(filename, name, scale, loc, theta=0):
   factor = bounds.max()
   blender_obj.rotation_euler[2] = theta[2]
   blender_obj.scale = [scale/factor, scale/factor, scale/factor]
-  blender_obj.location = [x, y, scale * bounds.max(0)[2]]
+
+  bounds = np.asarray([blender_obj.bound_box[i][0:3] for i in range(8)])
+  blender_obj.location = [x, y, -bounds[:, 2].min()]
 
   bpy.context.view_layer.objects.active = blender_obj
 
