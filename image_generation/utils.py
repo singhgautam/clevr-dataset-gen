@@ -101,7 +101,8 @@ def add_object(filename, name, scale, loc, theta=0):
   # Set the new object as active, then rotate, scale, and translate it
   assert len(bpy.context.selected_objects) == 1
   blender_obj = bpy.context.selected_objects[0]
-  x, y = loc
+  # x, y = loc
+  x, y = 0,0
   # bpy.context.scene.objects.active = bpy.data.objects[new_name]
 
   # set rotation
