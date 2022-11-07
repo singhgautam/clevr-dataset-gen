@@ -447,6 +447,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
         dist = (np.asarray(blender_objects[i].location[:]) - np.asarray(blender_objects[j].location[:]))
         dist = (dist ** 2).sum() ** 0.5
         if dist < r_i + r_j:
+          print('Overlapping: ', dist, r_i + r_j)
           overlapping = True
 
     if overlapping:
