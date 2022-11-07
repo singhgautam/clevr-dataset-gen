@@ -74,7 +74,7 @@ def set_layer(obj, layer_idx):
     obj.layers[i] = (i == layer_idx)
 
 
-def add_object(object_dir, name, scale, loc, theta=0):
+def add_object(filename, name, scale, loc, theta=0):
   """
   Load an object from a file. We assume that in the directory object_dir, there
   is a file named "$name.blend" which contains a single object named "$name"
@@ -91,8 +91,8 @@ def add_object(object_dir, name, scale, loc, theta=0):
     if obj.name.startswith(name):
       count += 1
 
-  filename = os.path.join(object_dir, '%s.blend' % name, 'Object', name)
-  bpy.ops.wm.append(filename=filename)
+  filename = '/common/home/gs790/downloads/Android_Figure_Orange/visual_geometry.obj'
+  bpy.ops.import_scene.obj(filepath=filename)
 
   # Give it a new name to avoid conflicts
   new_name = '%s_%d' % (name, count)

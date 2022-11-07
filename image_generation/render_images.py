@@ -95,13 +95,13 @@ parser.add_argument('--split', default='new',
     help="Name of the split for which we are rendering. This will be added to " +
          "the names of rendered images, and will also be stored in the JSON " +
          "scene structure for each image.")
-parser.add_argument('--output_image_dir', default='/research/projects/object_centric/gs790/idalle/datasets/clevr-big-001/images/',
+parser.add_argument('--output_image_dir', default='/common/home/gs790/idalle/paste/clevr-gso-001/images/',
     help="The directory where output images will be stored. It will be " +
          "created if it does not exist.")
-parser.add_argument('--output_scene_dir', default='/research/projects/object_centric/gs790/idalle/datasets/clevr-big-001/scenes/',
+parser.add_argument('--output_scene_dir', default='/common/home/gs790/idalle/paste/clevr-gso-001/scenes/',
     help="The directory where output JSON scene structures will be stored. " +
          "It will be created if it does not exist.")
-parser.add_argument('--output_scene_file', default='/research/projects/object_centric/gs790/idalle/datasets/clevr-big-001/CLEVR_scenes.json',
+parser.add_argument('--output_scene_file', default='/common/home/gs790/idalle/paste/clevr-gso-001/CLEVR_scenes.json',
     help="Path to write a single JSON file containing all scene information")
 parser.add_argument('--output_blend_dir', default='output/blendfiles',
     help="The directory where blender scene files will be stored, if the " +
