@@ -93,6 +93,8 @@ def add_object(filename, name, scale, loc, theta=0):
   # Set the new object as active, then rotate, scale, and translate it
   assert len(bpy.context.selected_objects) == 1
   blender_obj = bpy.context.selected_objects[0]
+  bpy.context.view_layer.objects.active = blender_obj
+
   x, y = loc
 
   # set pose
@@ -103,9 +105,9 @@ def add_object(filename, name, scale, loc, theta=0):
   blender_obj.scale = [scale/factor, scale/factor, scale/factor]
 
   bounds = np.asarray([blender_obj.bound_box[i][0:3] for i in range(8)])
-  blender_obj.location = [x, y, -bounds[:, 2].min()]
+  bpy.ops.transform.translate(value=(x, y, -bounds[:, 2].min()))
 
-  bpy.context.view_layer.objects.active = blender_obj
+
 
 
 
