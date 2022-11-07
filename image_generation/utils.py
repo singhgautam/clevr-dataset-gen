@@ -104,7 +104,7 @@ def add_object(filename, name, scale, loc, theta=0):
   blender_obj.scale = [scale * factor, scale * factor, scale * factor]
 
   bounds = np.asarray(blender_obj.dimensions[:])
-  bpy.ops.transform.translate(value=(x, y, bounds.max() ** np.sqrt(2)))
+  bpy.ops.transform.translate(value=(x, y, 0))
 
 
 
