@@ -68,7 +68,7 @@ parser.add_argument('--min_objects', default=2, type=int,
     help="The minimum number of objects to place in each scene")
 parser.add_argument('--max_objects', default=3, type=int,
     help="The maximum number of objects to place in each scene")
-parser.add_argument('--min_dist', default=2.0, type=float,
+parser.add_argument('--min_dist', default=2.5, type=float,
     help="The minimum allowed distance between object centers")
 parser.add_argument('--margin', default=0.0, type=float,
     help="Along all cardinal directions (left, right, front, back), all " +
@@ -376,12 +376,12 @@ def add_random_objects(scene_struct, num_objects, args, camera):
         for obj in blender_objects:
           utils.delete_object(obj)
         return add_random_objects(scene_struct, num_objects, args, camera)
-      x = random.uniform(-3, 3)
-      y = random.uniform(-3, 3)
+      x = random.uniform(-4, 4)
+      y = random.uniform(-3, 4)
       # Check to make sure the new object is further than min_dist from all
       # other objects, and further than margin along the four cardinal directions
       dists_good = True
-      margins_good = True
+      # margins_good = True
       for (xx, yy, rr) in positions:
         dx, dy = x - xx, y - yy
         dist = math.sqrt(dx * dx + dy * dy)
@@ -397,8 +397,8 @@ def add_random_objects(scene_struct, num_objects, args, camera):
         #     print('BROKEN MARGIN!')
         #     margins_good = False
         #     break
-        if not margins_good:
-          break
+        # if not margins_good:
+        #   break
 
       if dists_good and margins_good:
         break
