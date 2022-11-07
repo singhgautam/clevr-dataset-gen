@@ -117,6 +117,8 @@ def add_object(filename, name, scale, loc, theta=0):
   blender_obj.location[1] = y
   blender_obj.location[2] = scale
 
+  bpy.context.view_layer.objects.active = blender_obj
+
   # bpy.ops.transform.resize(value=(scale, scale, scale))
   # bpy.ops.transform.translate(value=(x, y, scale))
 
