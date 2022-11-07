@@ -101,12 +101,24 @@ def add_object(filename, name, scale, loc, theta=0):
   # Set the new object as active, then rotate, scale, and translate it
   assert len(bpy.context.selected_objects) == 1
   blender_obj = bpy.context.selected_objects[0]
-  import pdb; pdb.set_trace()
   x, y = loc
   # bpy.context.scene.objects.active = bpy.data.objects[new_name]
-  bpy.context.object.rotation_euler[2] = theta
-  bpy.ops.transform.resize(value=(scale, scale, scale))
-  bpy.ops.transform.translate(value=(x, y, scale))
+
+  # set rotation
+  blender_obj.rotation_euler[2] = theta
+
+  # set scale
+  blender_obj.scale[0] = scale
+  blender_obj.scale[1] = scale
+  blender_obj.scale[2] = scale
+
+  # set position
+  blender_obj.location[0] = x
+  blender_obj.location[1] = y
+  blender_obj.location[2] = scale
+
+  # bpy.ops.transform.resize(value=(scale, scale, scale))
+  # bpy.ops.transform.translate(value=(x, y, scale))
 
 
 def load_materials(material_dir):
