@@ -223,34 +223,42 @@ def render_scene(args,
   # Load materials
   utils.load_materials(args.material_dir)
 
+  utils.configure_cycles(output_image,
+                         args.width,
+                         args.height,
+                         args.render_tile_size,
+                         args.render_num_samples,
+                         args.render_min_bounces,
+                         args.render_max_bounces,
+                         use_gpu=args.gpu)
   # Set render arguments so we can get pixel coordinates later.
   # We use functionality specific to the CYCLES renderer so BLENDER_RENDER
   # cannot be used.
-  render_args = bpy.context.scene.render
-  render_args.engine = "CYCLES"
-  render_args.filepath = output_image
-  render_args.resolution_x = args.width
-  render_args.resolution_y = args.height
-  render_args.resolution_percentage = 100
-  render_args.tile_x = args.render_tile_size
-  render_args.tile_y = args.render_tile_size
-  if args.use_gpu == 1:
-    # Blender changed the API for enabling CUDA at some point
-    if bpy.app.version < (2, 78, 0):
-      bpy.context.user_preferences.system.compute_device_type = 'CUDA'
-      bpy.context.user_preferences.system.compute_device = 'CUDA_0'
-    else:
-      cycles_prefs = bpy.context.user_preferences.addons['cycles'].preferences
-      cycles_prefs.compute_device_type = 'CUDA'
-
-  # Some CYCLES-specific stuff
-  bpy.data.worlds['World'].cycles.sample_as_light = True
-  bpy.context.scene.cycles.blur_glossy = 2.0
-  bpy.context.scene.cycles.samples = args.render_num_samples
-  bpy.context.scene.cycles.transparent_min_bounces = args.render_min_bounces
-  bpy.context.scene.cycles.transparent_max_bounces = args.render_max_bounces
-  if args.use_gpu == 1:
-    bpy.context.scene.cycles.device = 'GPU'
+  # render_args = bpy.context.scene.render
+  # render_args.engine = "CYCLES"
+  # render_args.filepath = output_image
+  # render_args.resolution_x = args.width
+  # render_args.resolution_y = args.height
+  # render_args.resolution_percentage = 100
+  # render_args.tile_x = args.render_tile_size
+  # render_args.tile_y = args.render_tile_size
+  # if args.use_gpu == 1:
+  #   # Blender changed the API for enabling CUDA at some point
+  #   if bpy.app.version < (2, 78, 0):
+  #     bpy.context.user_preferences.system.compute_device_type = 'CUDA'
+  #     bpy.context.user_preferences.system.compute_device = 'CUDA_0'
+  #   else:
+  #     cycles_prefs = bpy.context.user_preferences.addons['cycles'].preferences
+  #     cycles_prefs.compute_device_type = 'CUDA'
+  #
+  # # Some CYCLES-specific stuff
+  # bpy.data.worlds['World'].cycles.sample_as_light = True
+  # bpy.context.scene.cycles.blur_glossy = 2.0
+  # bpy.context.scene.cycles.samples = args.render_num_samples
+  # bpy.context.scene.cycles.transparent_min_bounces = args.render_min_bounces
+  # bpy.context.scene.cycles.transparent_max_bounces = args.render_max_bounces
+  # if args.use_gpu == 1:
+  #   bpy.context.scene.cycles.device = 'GPU'
 
   # This will give ground-truth information about the scene and its objects
   scene_struct = {

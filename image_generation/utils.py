@@ -186,3 +186,30 @@ def add_material(name, **properties):
       output_node.inputs['Surface'],
   )
 
+def configure_cycles(output_path, width, height, tile_size, num_samples, min_bounces, max_bounces, use_gpu=False):
+    bpy.context.scene.render.engine = "CYCLES"
+    bpy.context.scene.render.filepath = str(output_path)
+    bpy.context.scene.render.resolution_x = width
+    bpy.context.scene.render.resolution_y = height
+    bpy.context.scene.render.resolution_percentage = 100
+    bpy.context.scene.render.tile_x = tile_size
+    bpy.context.scene.render.tile_y = tile_size
+    if use_gpu:
+      print('Trying to use GPUs!')
+
+      bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'
+      bpy.context.scene.cycles.device = 'GPU'
+      # get_devices() to let Blender detects GPU device
+      bpy.context.preferences.addons["cycles"].preferences.get_devices()
+      print(bpy.context.preferences.addons["cycles"].preferences.compute_device_type)
+      for d in bpy.context.preferences.addons["cycles"].preferences.devices:
+        d["use"] = 1  # Using all devices, include GPU and CPU
+        print(d["name"], d["use"])
+      # for d in bpy.context.preferences.addons["cycles"].preferences.devices:
+      #     d["use"] = 0
+
+    bpy.data.worlds['World'].cycles.sample_as_light = True
+    bpy.context.scene.cycles.blur_glossy = 2.0
+    bpy.context.scene.cycles.samples = num_samples
+    bpy.context.scene.cycles.transparent_min_bounces = min_bounces
+    bpy.context.scene.cycles.transparent_max_bounces = max_bounces
