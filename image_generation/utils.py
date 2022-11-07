@@ -95,7 +95,7 @@ def add_object(filename, name, scale, loc, theta=0):
 
   # set pose
   blender_obj.rotation_euler = theta
-  blender_obj.scale = [64.0 * scale, 64.0 * scale, 64.0 * scale]
+  blender_obj.scale = [50.0 * scale, 50.0 * scale, 50.0 * scale]
   blender_obj.location = [x, y, 2.0]
 
   bpy.context.view_layer.objects.active = blender_obj
