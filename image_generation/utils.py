@@ -99,7 +99,7 @@ def add_object(filename, name, scale, loc, theta=0):
 
   # set pose
   bounds = np.asarray(blender_obj.dimensions[:])
-  factor = 1./abs(bounds).max()
+  factor = 6./abs(bounds).max()
   blender_obj.rotation_euler = theta
   blender_obj.scale = [scale * factor, scale * factor, scale * factor]
 
