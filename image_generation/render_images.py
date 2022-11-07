@@ -419,15 +419,15 @@ def add_random_objects(scene_struct, num_objects, args, camera):
     positions.append((x, y, r))
 
     # Attach a random material
-    mat_name, mat_name_out = random.choice(material_mapping)
-    utils.add_material(mat_name, Color=rgba)
+    # mat_name, mat_name_out = random.choice(material_mapping)
+    # utils.add_material(mat_name, Color=rgba)
 
     # Record data about the object in the scene data structure
     pixel_coords = utils.get_camera_coords(camera, obj.location)
     objects.append({
       'shape': obj_name_out,
       'size': size_name,
-      'material': mat_name_out,
+      'material': "null",
       '3d_coords': tuple(obj.location),
       'rotation': theta,
       'pixel_coords': pixel_coords,
