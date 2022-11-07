@@ -114,9 +114,9 @@ def add_object(filename, name, scale, loc, theta=0):
   blender_obj.scale[2] = scale
 
   # set position
-  blender_obj.location[0] = x
-  blender_obj.location[1] = y
-  blender_obj.location[2] = scale
+  blender_obj.location[0] = 0
+  blender_obj.location[1] = 0
+  blender_obj.location[2] = 0
 
   bpy.context.scene.objects.active = blender_obj
 
