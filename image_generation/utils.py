@@ -99,7 +99,7 @@ def add_object(filename, name, scale, loc, theta=0):
   bounds = np.asarray([blender_obj.bound_box[i][0:3] for i in range(8)])
   bounds = abs(bounds)
   factor = bounds.max()
-  blender_obj.rotation_euler[2] = theta[2]
+  blender_obj.rotation_euler = theta
   blender_obj.scale = [scale/factor, scale/factor, scale/factor]
 
   bounds = np.asarray([blender_obj.bound_box[i][0:3] for i in range(8)])
