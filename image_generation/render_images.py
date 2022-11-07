@@ -270,7 +270,7 @@ def render_scene(args,
   }
 
   # Put a plane on the ground so we can compute cardinal directions
-  bpy.ops.mesh.primitive_plane_add(radius=5)
+  bpy.ops.mesh.primitive_plane_add(size=5)
   plane = bpy.context.object
 
   def rand(L):
