@@ -98,14 +98,12 @@ def add_object(filename, name, scale, loc, theta=0):
   x, y = loc
 
   # set pose
-  bounds = np.asarray([blender_obj.bound_box[i][0:3] for i in range(8)])
-  bounds = abs(bounds)
-  factor = bounds.max()
+  bounds = np.asarray(blender_obj.dimensions[:])
+  factor = 1./abs(bounds).max()
   blender_obj.rotation_euler = theta
-  blender_obj.scale = [scale/factor, scale/factor, scale/factor]
+  blender_obj.scale = [scale * factor, scale * factor, scale * factor]
 
-  bounds = np.asarray([blender_obj.bound_box[i][0:3] for i in range(8)])
-  bpy.ops.transform.translate(value=(x, y, -bounds[:, 2].min()))
+  bpy.ops.transform.translate(value=(x, y, 0))
 
 
 
