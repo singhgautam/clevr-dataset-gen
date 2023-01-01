@@ -306,8 +306,6 @@ def checker(positions, sizes):
 if __name__ == '__main__':
 
     # PARAMETERS
-    C, H, W = 3, args.image_size, args.image_size
-
     RULES = ["xshift", "xswap", "colorchange"]
     SHAPES = ['SmoothCube_v2', 'Sphere', 'SmoothCylinder']
     COLORS = [
