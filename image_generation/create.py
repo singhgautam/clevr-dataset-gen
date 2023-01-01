@@ -96,7 +96,8 @@ parser.add_argument('--render_tile_size', default=256, type=int,
                          "rendering may achieve better performance using smaller tile sizes " +
                          "while larger tile sizes may be optimal for GPU-based rendering.")
 
-args = parser.parse_args()
+argv = utils.extract_args()
+args = parser.parse_args(argv)
 
 
 def render_scene(num_objects, positions, rotations, colors, shapes, sizes, materials,
