@@ -65,6 +65,8 @@ parser.add_argument('--num_test', type=int, default=30)
 parser.add_argument('--train_ratio', type=float, default=0.2)
 parser.add_argument('--test_ratio', type=float, default=0.2)
 
+parser.add_argument('--rule', type=int, default=0)
+
 
 # Rendering options
 parser.add_argument('--use_gpu', default=1, type=int,
