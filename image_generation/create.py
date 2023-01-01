@@ -343,11 +343,11 @@ if __name__ == '__main__':
     BINDS, CORES = generate_binds(COLORS, SHAPES, SIZES, ratio=train_ratio)  # train
     UNSEEN_BINDS = generate_unseen_binds(COLORS, SHAPES, SIZES, BINDS, ratio=test_ratio)  # test
 
-    print(f"Train Comp: {len(BINDS)}, Test Comp: {len(UNSEEN_BINDS)}")
+    # print(f"Train Comp: {len(BINDS)}, Test Comp: {len(UNSEEN_BINDS)}")
 
-    data_path = os.path.join(args.save_path, f"clevr-{R}-alpha-{train_ratio}")
-    train_path = os.path.join(data_path, f"train")
-    test_path = os.path.join(data_path, f"test")
+    data_path = os.path.join(args.save_path, "clevr-{}-alpha-{}".format(R, train_ratio))
+    train_path = os.path.join(data_path, "train")
+    test_path = os.path.join(data_path, "test")
 
     os.makedirs(data_path, exist_ok=True)
     os.makedirs(train_path, exist_ok=True)
@@ -377,7 +377,7 @@ if __name__ == '__main__':
 
     print("Train Set : {}".format(args.num_train))
     for run in tqdm(range(args.num_train)):
-        sample_path = os.path.join(train_path, f"{run:08d}")
+        sample_path = os.path.join(train_path, "{:08d}".format(run))
         os.makedirs(sample_path, exist_ok=True)
 
         N = np.random.choice(np.arange(args.min_objects, args.max_objects + 1))
@@ -413,22 +413,22 @@ if __name__ == '__main__':
 
         render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
                      args,
-                     output_image=os.path.join(sample_path, f"source.png"),
-                     output_scene=os.path.join(sample_path, f"source.json"))
+                     output_image=os.path.join(sample_path, "source.png"),
+                     output_scene=os.path.join(sample_path, "source.json"))
 
         if R == 'xshift':
             obj_positions = [(x + XSHIFT, y) for x,y in obj_positions]
 
         render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
                      args,
-                     output_image=os.path.join(sample_path, f"target.png"),
-                     output_scene=os.path.join(sample_path, f"target.json"))
+                     output_image=os.path.join(sample_path, "target.png"),
+                     output_scene=os.path.join(sample_path, "target.json"))
 
 
     print("Test Set : {}".format(args.num_test))
 
     for run in tqdm(range(args.num_test)):
-        sample_path = os.path.join(test_path, f"{run:08d}")
+        sample_path = os.path.join(test_path, "{:08d}".format(run))
         os.makedirs(sample_path, exist_ok=True)
 
         N = np.random.choice(np.arange(args.min_objects, args.max_objects + 1))
@@ -464,15 +464,15 @@ if __name__ == '__main__':
 
         render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
                      args,
-                     output_image=os.path.join(sample_path, f"source.png"),
-                     output_scene=os.path.join(sample_path, f"source.json"))
+                     output_image=os.path.join(sample_path, "source.png"),
+                     output_scene=os.path.join(sample_path, "source.json"))
 
         if R == 'xshift':
             obj_positions = [(x + XSHIFT, y) for x, y in obj_positions]
 
         render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
                      args,
-                     output_image=os.path.join(sample_path, f"target.png"),
-                     output_scene=os.path.join(sample_path, f"target.json"))
+                     output_image=os.path.join(sample_path, "target.png"),
+                     output_scene=os.path.join(sample_path, "target.json"))
 
     print('Dataset saved at : {}'.format(data_path))
