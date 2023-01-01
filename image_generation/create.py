@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import numpy as np
 import h5py
 from tqdm import tqdm
@@ -12,7 +14,7 @@ import cv2
 import math
 import json
 
-from __future__ import print_function
+
 import math, sys, random, argparse, json, os, tempfile
 from datetime import datetime as dt
 from collections import Counter
