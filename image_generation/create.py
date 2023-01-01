@@ -59,8 +59,8 @@ parser.add_argument('--max_objects', default=2, type=int,
 # Output settings
 parser.add_argument('--save_path', default='/research/projects/object_centric/gs790/sysvim/datasets/clevr-xshift-001')
 
-parser.add_argument('--num_train', type=int, default=10)
-parser.add_argument('--num_test', type=int, default=10)
+parser.add_argument('--num_train', type=int, default=32)
+parser.add_argument('--num_test', type=int, default=32)
 
 parser.add_argument('--train_ratio', type=float, default=0.2)
 parser.add_argument('--test_ratio', type=float, default=0.2)
