@@ -8,7 +8,6 @@ import random
 import sys
 
 import numpy as np
-from tqdm import tqdm
 
 """
 This file expects to be run from Blender like this:
@@ -60,8 +59,8 @@ parser.add_argument('--max_objects', default=2, type=int,
 # Output settings
 parser.add_argument('--save_path', default='/research/projects/object_centric/gs790/sysvim/datasets/clevr-xshift-001')
 
-parser.add_argument('--num_train', type=int, default=64000)
-parser.add_argument('--num_test', type=int, default=12800)
+parser.add_argument('--num_train', type=int, default=30)
+parser.add_argument('--num_test', type=int, default=30)
 
 parser.add_argument('--train_ratio_increments', type=float, default=0.2)
 parser.add_argument('--test_ratio', type=float, default=0.2)
@@ -369,7 +368,7 @@ if __name__ == '__main__':
         json.dump(test_info, outfile)
 
     print("Train Set : {}".format(args.num_train))
-    for run in tqdm(range(args.num_train)):
+    for run in range(args.num_train):
         sample_path = os.path.join(train_path, "{:08d}".format(run))
         os.makedirs(sample_path, exist_ok=True)
 
@@ -420,7 +419,7 @@ if __name__ == '__main__':
 
     print("Test Set : {}".format(args.num_test))
 
-    for run in tqdm(range(args.num_test)):
+    for run in range(args.num_test):
         sample_path = os.path.join(test_path, "{:08d}".format(run))
         os.makedirs(sample_path, exist_ok=True)
 
