@@ -453,7 +453,7 @@ if __name__ == '__main__':
             obj_colors.append(COLORS[color[i]])
             obj_shapes.append(SHAPES[shape[i]])
             obj_sizes.append(SIZES[size[i]])
-            obj_materials.append('rubber')
+            obj_materials.append('Rubber')
 
         render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
                      args,
