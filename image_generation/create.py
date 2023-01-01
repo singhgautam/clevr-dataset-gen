@@ -1,23 +1,14 @@
 from __future__ import print_function
 
-import numpy as np
-import h5py
-from tqdm import tqdm
-import random
 import argparse
-
-from spriteworld import renderers as spriteworld_renderers
-from spriteworld.sprite import Sprite
-import os
-import cv2
-
-import math
 import json
+import math
+import os
+import random
+import sys
 
-
-import math, sys, random, argparse, json, os, tempfile
-from datetime import datetime as dt
-from collections import Counter
+import numpy as np
+from tqdm import tqdm
 
 """
 This file expects to be run from Blender like this:
