@@ -94,7 +94,6 @@ parser.add_argument('--bind_path', default='precomputed_binds/binds.json')
 parser.add_argument('--num_samples', type=int, default=100)
 
 parser.add_argument('--rule', default='xshift')
-parser.add_argument('--seed', type=int, default=0)
 
 argv = utils.extract_args()
 args = parser.parse_args(argv)
@@ -241,10 +240,6 @@ def checker(positions, sizes):
 
 
 if __name__ == '__main__':
-
-    # Set Seeds
-    random.seed(args.seed)
-    np.random.seed(args.seed)
 
     # Load binds
     with open(args.bind_path) as binds_file:
