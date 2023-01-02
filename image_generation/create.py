@@ -9,6 +9,8 @@ import sys
 
 import numpy as np
 
+from bind_utils import bind_generator
+
 """
 This file expects to be run from Blender like this:
 
@@ -49,24 +51,6 @@ parser.add_argument('--shape_color_combos_json', default=None,
                          "allowed color names for that shape. This allows rendering images " +
                          "for CLEVR-CoGenT.")
 
-# Settings for objects
-parser.add_argument('--min_objects', default=2, type=int,
-                    help="The minimum number of objects to place in each scene")
-parser.add_argument('--max_objects', default=2, type=int,
-                    help="The maximum number of objects to place in each scene")
-
-
-# Output settings
-parser.add_argument('--save_path', default='/research/projects/object_centric/gs790/sysvim/datasets/clevr-xshift-001')
-
-parser.add_argument('--num_train', type=int, default=32)
-parser.add_argument('--num_test', type=int, default=32)
-
-parser.add_argument('--train_ratio', type=float, default=0.2)
-parser.add_argument('--test_ratio', type=float, default=0.2)
-
-parser.add_argument('--rule', type=int, default=0)
-
 
 # Rendering options
 parser.add_argument('--use_gpu', default=1, type=int,
@@ -97,6 +81,25 @@ parser.add_argument('--render_tile_size', default=256, type=int,
                          "quality of the rendered image but may affect the speed; CPU-based " +
                          "rendering may achieve better performance using smaller tile sizes " +
                          "while larger tile sizes may be optimal for GPU-based rendering.")
+
+# Object options
+parser.add_argument('--min_objects', default=2, type=int,
+                    help="The minimum number of objects to place in each scene")
+parser.add_argument('--max_objects', default=2, type=int,
+                    help="The maximum number of objects to place in each scene")
+
+# Output options
+parser.add_argument('--save_path', default='/research/projects/object_centric/gs790/sysvim/datasets/clevr-xshift-001')
+
+parser.add_argument('--num_train', type=int, default=32)
+parser.add_argument('--num_test', type=int, default=32)
+
+parser.add_argument('--test_alpha', type=float, default=0.2)
+parser.add_argument('--train_alphas', nargs='+', default=[0.0, 0.02, 0.05, 0.10, 0.20, 0.50])
+
+parser.add_argument('--rule', default='xshift')
+
+parser.add_argument('--seed', type=int, default=0)
 
 argv = utils.extract_args()
 args = parser.parse_args(argv)
@@ -229,68 +232,6 @@ def add_objects(num_objects, positions, rotations, colors, shapes, sizes, materi
     return objects, blender_objects
 
 
-def generate_binds(colors_, shapes_, sizes_, ratio=0.8):
-    must = max([len(colors_), len(shapes_), len(sizes_)])
-
-    colors = np.append(np.arange(len(colors_)), np.random.randint(low=len(colors_), size=must - len(colors_)))
-    shapes = np.append(np.arange(len(shapes_)), np.random.randint(low=len(shapes_), size=must - len(shapes_)))
-    sizes = np.append(np.arange(len(sizes_)), np.random.randint(low=len(sizes_), size=must - len(sizes_)))
-
-    N = len(colors_) * len(shapes_) * len(sizes_)
-    N_sample = math.floor((N - must) * ratio)
-
-    color = np.random.choice(colors, (must, 1), replace=False)
-    shape = np.random.choice(shapes, (must, 1), replace=False)
-    size = np.random.choice(sizes, (must, 1), replace=False)
-
-    binds = np.concatenate((color, shape, size), axis=-1)
-    cores = binds[:]
-
-    pool = generate_unseen_binds(colors_, shapes_, sizes_, binds, 1)
-
-    for i in range(N_sample):
-        idx = np.random.choice(np.arange(pool.shape[0]))
-        sample = pool[idx]
-        pool = np.delete(pool, idx, axis=0)
-        binds = np.concatenate([binds, [sample]], axis=0)
-
-    return binds, cores
-
-
-def generate_unseen_binds(colors_, shapes_, sizes_, binds_, ratio=0.2):
-    colors = np.arange(len(colors_))
-    shapes = np.arange(len(shapes_))
-    sizes = np.arange(len(sizes_))
-
-    must = max([len(colors_), len(shapes_), len(sizes_)])
-
-    N = len(colors_) * len(shapes_) * len(sizes_)
-    N_sample = N - math.floor((N - must) * (1 - ratio)) - must
-
-    if N_sample > N - len(binds_):  # switch to i.i.d
-        print("switch to i.i.d")
-        return binds_[:]
-
-    unseen_binds_ = []
-
-    unseen_binds_ = np.array(np.meshgrid(colors, shapes, sizes)).T.reshape(-1, 3)
-    binds_ = np.array(binds_)
-
-    rows1 = unseen_binds_.view([('', unseen_binds_.dtype)] * unseen_binds_.shape[1])
-    rows2 = binds_.view([('', binds_.dtype)] * binds_.shape[1])
-    unseen_binds_ = np.setdiff1d(rows1, rows2).view(unseen_binds_.dtype).reshape(-1, unseen_binds_.shape[1])
-
-    binds = []
-
-    for i in range(N_sample):
-        idx = np.random.choice(np.arange(unseen_binds_.shape[0]))
-        sample = unseen_binds_[idx]
-        unseen_binds_ = np.delete(unseen_binds_, idx, axis=0)
-        binds += [sample]
-
-    return np.array(binds)
-
-
 def checker(positions, sizes):
     N = positions.shape[0]
     for i in range(N):
@@ -306,134 +247,132 @@ def checker(positions, sizes):
 
 if __name__ == '__main__':
 
-    # PARAMETERS
+    # SETTINGS
     RULES = ["xshift", "xswap", "colorchange"]
-    SHAPES = ['SmoothCube_v2', 'Sphere', 'SmoothCylinder']
+
+    SHAPES = ['SmoothCube_v2', 'Sphere', 'SmoothCylinder', 'Suzanne']
+
     COLORS = [
         (1., 0., 0., 1.),
         (0., 1., 0., 1.),
         (0., 0., 1., 1.),
+        (0., 1., 1., 1.),
+        (1., 0., 1., 1.),
+        (1., 1., 0., 1.),
     ]
+
     SIZES = [
+        1.,
         1.5,
-        2.0,
-        2.5,
+        2.,
     ]
+
+    MATERIALS = [
+        "Rubber",
+        "Metal"
+    ]
+
     XSHIFT = 2.0
 
-    num_shapes = len(SHAPES)
+    # Set Seeds
+    random.seed(args.seed)
+    np.random.seed(args.seed)
 
-    # Composition space ratio
-    test_ratio = args.test_ratio
-    train_ratio = args.train_ratio
-    assert train_ratio <= 1 - test_ratio, "Improper train-test split ratio."
+    # Make Binds
+    test_binds, train_binds, core_binds = bind_generator([len(COLORS), len(SHAPES), len(SIZES), len(MATERIALS)], train_alphas=args.train_alphas, test_alpha=args.test_alpha)
 
-    # PARAMETERS per TASK
-    R = RULES[args.rule]
-
-    # Binding Pairs (TRAIN)
-    BINDS, CORES = generate_binds(COLORS, SHAPES, SIZES, ratio=train_ratio)  # train
-    UNSEEN_BINDS = generate_unseen_binds(COLORS, SHAPES, SIZES, BINDS, ratio=test_ratio)  # test
-
-    # print(f"Train Comp: {len(BINDS)}, Test Comp: {len(UNSEEN_BINDS)}")
-
-    data_path = os.path.join(args.save_path, "clevr-{}-alpha-{}".format(R, train_ratio))
-    train_path = os.path.join(data_path, "train")
-    test_path = os.path.join(data_path, "test")
-
+    # Make directory
+    data_path = os.path.join(args.save_path, "clevr-{}".format(args.rule))
     os.makedirs(data_path, exist_ok=True)
-    os.makedirs(train_path, exist_ok=True)
-    os.makedirs(test_path, exist_ok=True)
 
-    train_info = {
-        "colors": COLORS,
-        "shapes": SHAPES,
-        "sizes": SIZES,
-        "ratio": train_ratio,
-        "binds": BINDS.tolist(),
-        "cores": CORES.tolist(),
-    }
-    with open(os.path.join(train_path, "info.json"), 'w') as outfile:
-        json.dump(train_info, outfile)
+    # Dump train sets for each alpha
+    for alpha, binds in train_binds.items():
+        train_path = os.path.join(data_path, "train-{}".format(alpha))
+        os.makedirs(train_path, exist_ok=True)
+
+        train_info = {
+            "colors": COLORS,
+            "shapes": SHAPES,
+            "sizes": SIZES,
+            "materials": MATERIALS,
+            "alpha": alpha,
+            "binds": list(binds),
+            "cores": list(core_binds),
+        }
+
+        with open(os.path.join(train_path, "info.json"), 'w') as outfile:
+            json.dump(train_info, outfile)
+
+        for run in range(args.num_train):
+            sample_path = os.path.join(train_path, "{:08d}".format(run))
+            os.makedirs(sample_path, exist_ok=True)
+
+            N = np.random.choice(np.arange(args.min_objects, args.max_objects + 1))
+            object_binds = random.choices(list(binds), k=N)
+
+            x = np.random.uniform(-3, 3, (N, 2))
+            while True:
+                x = np.random.uniform(-3, 3, (N, 2))
+                if checker(x, [SIZES[object_binds[i][2]] for i in range(N)]):
+                    break
+            angle = np.random.random(size=(N)) * 360.
+
+            obj_positions = []
+            obj_rotations = []
+            obj_colors = []
+            obj_shapes = []
+            obj_sizes = []
+            obj_materials = []
+
+            for i in range(N):
+                obj_positions.append((x[i, 0], x[i, 1]))
+                obj_rotations.append(angle[i])
+                obj_colors.append(COLORS[object_binds[i][0]])
+                obj_shapes.append(SHAPES[object_binds[i][1]])
+                obj_sizes.append(SIZES[object_binds[i][2]])
+                obj_materials.append(MATERIALS[object_binds[i][3]])
+
+            render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
+                         args,
+                         output_image=os.path.join(sample_path, "source.png"),
+                         output_scene=os.path.join(sample_path, "source.json"))
+
+            if args.rule == 'xshift':
+                obj_positions = [(x + XSHIFT, y) for x,y in obj_positions]
+
+            render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
+                         args,
+                         output_image=os.path.join(sample_path, "target.png"),
+                         output_scene=os.path.join(sample_path, "target.json"))
+
+    # Dump Test Set
+    test_path = os.path.join(data_path, "test")
+    os.makedirs(test_path, exist_ok=True)
 
     test_info = {
         "colors": COLORS,
         "shapes": SHAPES,
         "sizes": SIZES,
-        "ratio": test_ratio,
-        "unseen_binds": UNSEEN_BINDS.tolist(),
-        "cores": CORES.tolist(),
+        "materials": MATERIALS,
+        "ratio": args.test_alpha,
+        "unseen_binds": list(test_binds),
+        "cores": list(core_binds),
     }
+
     with open(os.path.join(test_path, "info.json"), 'w') as outfile:
         json.dump(test_info, outfile)
-
-    print("Train Set : {}".format(args.num_train))
-    for run in range(args.num_train):
-        sample_path = os.path.join(train_path, "{:08d}".format(run))
-        os.makedirs(sample_path, exist_ok=True)
-
-        N = np.random.choice(np.arange(args.min_objects, args.max_objects + 1))
-        bind = np.random.choice(np.arange(len(BINDS)), size=(N))
-        bind = BINDS[bind]
-
-        color = bind[:, 0]
-        shape = bind[:, 1]
-        size = bind[:, 2]
-
-        x = np.random.uniform(-4, 4, (N, 2))
-        while True:
-            x = np.random.uniform(-4, 4, (N, 2))
-            if checker(x, [SIZES[size[i]] for i in range(N)]):
-                break
-
-        angle = np.random.random(size=(N)) * 360.
-
-        obj_positions = []
-        obj_rotations = []
-        obj_colors = []
-        obj_shapes = []
-        obj_sizes = []
-        obj_materials = []
-
-        for i in range(N):
-            obj_positions.append((x[i, 0], x[i, 1]))
-            obj_rotations.append(angle[i])
-            obj_colors.append(COLORS[color[i]])
-            obj_shapes.append(SHAPES[shape[i]])
-            obj_sizes.append(SIZES[size[i]])
-            obj_materials.append('Rubber')
-
-        render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
-                     args,
-                     output_image=os.path.join(sample_path, "source.png"),
-                     output_scene=os.path.join(sample_path, "source.json"))
-
-        if R == 'xshift':
-            obj_positions = [(x + XSHIFT, y) for x,y in obj_positions]
-
-        render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
-                     args,
-                     output_image=os.path.join(sample_path, "target.png"),
-                     output_scene=os.path.join(sample_path, "target.json"))
-
-    print("Test Set : {}".format(args.num_test))
 
     for run in range(args.num_test):
         sample_path = os.path.join(test_path, "{:08d}".format(run))
         os.makedirs(sample_path, exist_ok=True)
 
         N = np.random.choice(np.arange(args.min_objects, args.max_objects + 1))
-        bind = np.random.choice(np.arange(len(UNSEEN_BINDS)), size=(N))
-        bind = UNSEEN_BINDS[bind]
+        object_binds = random.choices(list(test_binds), k=N)
 
-        color = bind[:, 0]
-        shape = bind[:, 1]
-        size = bind[:, 2]
-
-        x = np.random.uniform(-4, 4, (N, 2))
+        x = np.random.uniform(-3, 3, (N, 2))
         while True:
-            x = np.random.uniform(-4, 4, (N, 2))
-            if checker(x, [SIZES[size[i]] for i in range(N)]):
+            x = np.random.uniform(-3, 3, (N, 2))
+            if checker(x, [SIZES[object_binds[i][2]] for i in range(N)]):
                 break
 
         angle = np.random.random(size=(N)) * 360.
@@ -448,17 +387,17 @@ if __name__ == '__main__':
         for i in range(N):
             obj_positions.append((x[i, 0], x[i, 1]))
             obj_rotations.append(angle[i])
-            obj_colors.append(COLORS[color[i]])
-            obj_shapes.append(SHAPES[shape[i]])
-            obj_sizes.append(SIZES[size[i]])
-            obj_materials.append('Rubber')
+            obj_colors.append(COLORS[object_binds[i][0]])
+            obj_shapes.append(SHAPES[object_binds[i][1]])
+            obj_sizes.append(SIZES[object_binds[i][2]])
+            obj_materials.append(MATERIALS[object_binds[i][3]])
 
         render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
                      args,
                      output_image=os.path.join(sample_path, "source.png"),
                      output_scene=os.path.join(sample_path, "source.json"))
 
-        if R == 'xshift':
+        if args.rule == 'xshift':
             obj_positions = [(x + XSHIFT, y) for x, y in obj_positions]
 
         render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,

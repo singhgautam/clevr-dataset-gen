@@ -67,15 +67,6 @@ def get_camera_coords(cam, pos):
     return px, py, z
 
 
-def set_layer(obj, layer_idx):
-    """ Move an object to a particular layer """
-    # Set the target layer to True first because an object must always be on
-    # at least one layer.
-    obj.layers[layer_idx] = True
-    for i in range(len(obj.layers)):
-        obj.layers[i] = (i == layer_idx)
-
-
 def add_object(object_dir, name, scale, loc, theta=0):
     """
   Load an object from a file. We assume that in the directory object_dir, there

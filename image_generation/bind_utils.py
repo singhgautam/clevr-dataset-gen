@@ -29,7 +29,7 @@ def bind_generator(counts, train_alphas, test_alpha):
         train_binds[train_alpha] = set(random.sample(noncore_nontest_binds, num_noncore_train_binds))
         train_binds[train_alpha] = train_binds[train_alpha].union(core_binds)
 
-    return test_binds, train_binds
+    return test_binds, train_binds, core_binds
 
 
 if __name__ == '__main__':
