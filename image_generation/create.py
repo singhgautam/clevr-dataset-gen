@@ -229,7 +229,6 @@ def add_objects(num_objects, positions, rotations, colors, shapes, sizes, materi
     return objects, blender_objects
 
 
-
 def generate_binds(colors_, shapes_, sizes_, ratio=0.8):
     must = max([len(colors_), len(shapes_), len(sizes_)])
 
@@ -416,7 +415,6 @@ if __name__ == '__main__':
                      args,
                      output_image=os.path.join(sample_path, "target.png"),
                      output_scene=os.path.join(sample_path, "target.json"))
-
 
     print("Test Set : {}".format(args.num_test))
 
