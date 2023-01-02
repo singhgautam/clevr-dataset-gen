@@ -2,14 +2,13 @@ from __future__ import print_function
 
 import argparse
 import json
-import math
 import os
 import random
 import sys
 
 import numpy as np
 
-from bind_utils import bind_generator
+from configs import *
 
 """
 This file expects to be run from Blender like this:
@@ -89,16 +88,12 @@ parser.add_argument('--max_objects', default=2, type=int,
                     help="The maximum number of objects to place in each scene")
 
 # Output options
-parser.add_argument('--save_path', default='/research/projects/object_centric/gs790/sysvim/datasets/clevr-xshift-002')
+parser.add_argument('--save_path', default='output/')
+parser.add_argument('--bind_path', default='precomputed_binds/binds.json')
 
-parser.add_argument('--num_train', type=int, default=32)
-parser.add_argument('--num_test', type=int, default=32)
-
-parser.add_argument('--test_alpha', type=float, default=0.2)
-parser.add_argument('--train_alphas', nargs='+', default=[0.0, 0.02, 0.05, 0.10, 0.20, 0.50])
+parser.add_argument('--num_samples', type=int, default=100)
 
 parser.add_argument('--rule', default='xshift')
-
 parser.add_argument('--seed', type=int, default=0)
 
 argv = utils.extract_args()
@@ -247,127 +242,26 @@ def checker(positions, sizes):
 
 if __name__ == '__main__':
 
-    # SETTINGS
-    RULES = ["xshift", "xswap", "colorchange"]
-
-    SHAPES = ['SmoothCube_v2', 'Sphere', 'SmoothCylinder', 'Suzanne']
-
-    COLORS = [
-        (1., 0., 0., 1.),
-        (0., 1., 0., 1.),
-        (0., 0., 1., 1.),
-        (0., 1., 1., 1.),
-        (1., 0., 1., 1.),
-        (1., 1., 0., 1.),
-    ]
-
-    SIZES = [
-        1.,
-        1.5,
-        2.,
-    ]
-
-    MATERIALS = [
-        "Rubber",
-        "MyMetal"
-    ]
-
-    XSHIFT = 2.0
-
     # Set Seeds
     random.seed(args.seed)
     np.random.seed(args.seed)
 
-    # Make Binds
-    test_binds, train_binds, core_binds = bind_generator([len(COLORS), len(SHAPES), len(SIZES), len(MATERIALS)], train_alphas=args.train_alphas, test_alpha=args.test_alpha)
+    # Load binds
+    with open(args.bind_path) as binds_file:
+        binds = json.load(binds_file)
+        binds = binds["binds"]
 
-    # Make directory
-    data_path = os.path.join(args.save_path, "clevr-{}".format(args.rule))
+    # Dump Set
+    data_path = args.save_path
     os.makedirs(data_path, exist_ok=True)
 
-    # Dump train sets for each alpha
-    for alpha, binds in train_binds.items():
-        train_path = os.path.join(data_path, "train-{}".format(alpha))
-        os.makedirs(train_path, exist_ok=True)
-
-        train_info = {
-            "colors": COLORS,
-            "shapes": SHAPES,
-            "sizes": SIZES,
-            "materials": MATERIALS,
-            "alpha": alpha,
-            "binds": list(binds),
-            "cores": list(core_binds),
-        }
-
-        with open(os.path.join(train_path, "info.json"), 'w') as outfile:
-            json.dump(train_info, outfile)
-
-        for run in range(args.num_train):
-            sample_path = os.path.join(train_path, "{:08d}".format(run))
-            os.makedirs(sample_path, exist_ok=True)
-
-            N = np.random.choice(np.arange(args.min_objects, args.max_objects + 1))
-            object_binds = [random.choice(list(binds)) for _ in range(N)]
-
-            x = np.random.uniform(-3, 3, (N, 2))
-            while True:
-                x = np.random.uniform(-3, 3, (N, 2))
-                if checker(x, [SIZES[object_binds[i][2]] for i in range(N)]):
-                    break
-            angle = np.random.random(size=(N)) * 360.
-
-            obj_positions = []
-            obj_rotations = []
-            obj_colors = []
-            obj_shapes = []
-            obj_sizes = []
-            obj_materials = []
-
-            for i in range(N):
-                obj_positions.append((x[i, 0], x[i, 1]))
-                obj_rotations.append(angle[i])
-                obj_colors.append(COLORS[object_binds[i][0]])
-                obj_shapes.append(SHAPES[object_binds[i][1]])
-                obj_sizes.append(SIZES[object_binds[i][2]])
-                obj_materials.append(MATERIALS[object_binds[i][3]])
-
-            render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
-                         args,
-                         output_image=os.path.join(sample_path, "source.png"),
-                         output_scene=os.path.join(sample_path, "source.json"))
-
-            if args.rule == 'xshift':
-                obj_positions = [(x + XSHIFT, y) for x,y in obj_positions]
-
-            render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
-                         args,
-                         output_image=os.path.join(sample_path, "target.png"),
-                         output_scene=os.path.join(sample_path, "target.json"))
-
-    # Dump Test Set
-    test_path = os.path.join(data_path, "test")
-    os.makedirs(test_path, exist_ok=True)
-
-    test_info = {
-        "colors": COLORS,
-        "shapes": SHAPES,
-        "sizes": SIZES,
-        "materials": MATERIALS,
-        "ratio": args.test_alpha,
-        "unseen_binds": list(test_binds),
-        "cores": list(core_binds),
-    }
-
-    with open(os.path.join(test_path, "info.json"), 'w') as outfile:
-        json.dump(test_info, outfile)
-
-    for run in range(args.num_test):
-        sample_path = os.path.join(test_path, "{:08d}".format(run))
+    for run in range(args.num_samples):
+        sample_label = random.randint(0, 10 ** 16)
+        sample_path = os.path.join(data_path, "{:018d}".format(sample_label))
         os.makedirs(sample_path, exist_ok=True)
 
         N = np.random.choice(np.arange(args.min_objects, args.max_objects + 1))
-        object_binds = [random.choice(list(test_binds)) for _ in range(N)]
+        object_binds = [random.choice(binds) for _ in range(N)]
 
         x = np.random.uniform(-3, 3, (N, 2))
         while True:
@@ -398,7 +292,7 @@ if __name__ == '__main__':
                      output_scene=os.path.join(sample_path, "source.json"))
 
         if args.rule == 'xshift':
-            obj_positions = [(x + XSHIFT, y) for x, y in obj_positions]
+            obj_positions = [(x + SHIFT_AMOUNT, y) for x, y in obj_positions]
 
         render_scene(N, obj_positions, obj_rotations, obj_colors, obj_shapes, obj_sizes, obj_materials,
                      args,
