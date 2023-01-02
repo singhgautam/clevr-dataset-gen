@@ -89,7 +89,7 @@ parser.add_argument('--max_objects', default=2, type=int,
                     help="The maximum number of objects to place in each scene")
 
 # Output options
-parser.add_argument('--save_path', default='/research/projects/object_centric/gs790/sysvim/datasets/clevr-xshift-001')
+parser.add_argument('--save_path', default='/research/projects/object_centric/gs790/sysvim/datasets/clevr-xshift-002')
 
 parser.add_argument('--num_train', type=int, default=32)
 parser.add_argument('--num_test', type=int, default=32)
