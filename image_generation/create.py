@@ -308,7 +308,7 @@ if __name__ == '__main__':
             os.makedirs(sample_path, exist_ok=True)
 
             N = np.random.choice(np.arange(args.min_objects, args.max_objects + 1))
-            object_binds = random.choices(list(binds), k=N)
+            object_binds = [random.choice(list(binds)) for _ in range(N)]
 
             x = np.random.uniform(-3, 3, (N, 2))
             while True:
@@ -367,7 +367,7 @@ if __name__ == '__main__':
         os.makedirs(sample_path, exist_ok=True)
 
         N = np.random.choice(np.arange(args.min_objects, args.max_objects + 1))
-        object_binds = random.choices(list(test_binds), k=N)
+        object_binds = [random.choice(list(test_binds)) for _ in range(N)]
 
         x = np.random.uniform(-3, 3, (N, 2))
         while True:
