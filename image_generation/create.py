@@ -269,7 +269,7 @@ if __name__ == '__main__':
 
     MATERIALS = [
         "Rubber",
-        "Metal"
+        "MyMetal"
     ]
 
     XSHIFT = 2.0
